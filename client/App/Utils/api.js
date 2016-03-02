@@ -132,6 +132,22 @@ var api = {
     });
   },
 
+  //fetchUserStreams function ******
+  fetchUserStreams(userId, callback) {
+    var url = 'http://' + config.url + ':8000/fetchUserStreams?userId=' + userId;
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(function(photoCollections) {
+      callback(photoCollections._bodyInit);
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+  },
+
   fetchUserFavorites(userId, callback) {
     var url = 'http://' + config.url + ':8000/fetchUserFavorites?userId=' + userId;
     return fetch(url, {
