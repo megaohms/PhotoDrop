@@ -822,7 +822,7 @@
 				INFOPLIST_FILE = ProfoundMongoose/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = PhotoDropColin;
+				PRODUCT_BUNDLE_IDENTIFIER = PhotoDropBundle;
 				PRODUCT_NAME = PhotoDrop;
 				PROVISIONING_PROFILE = "";
 			};
@@ -847,7 +847,7 @@
 				INFOPLIST_FILE = ProfoundMongoose/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = PhotoDropColin;
+				PRODUCT_BUNDLE_IDENTIFIER = PhotoDropBundle;
 				PRODUCT_NAME = PhotoDrop;
 				PROVISIONING_PROFILE = "";
 			};
