@@ -27,4 +27,4 @@ bower_components/
 
 client/ios/ProfoundMongoose/AppDelegate.m
 
-client/Utils/config.js
+client/App/Utils/config.js
