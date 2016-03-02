@@ -193,9 +193,9 @@ var api = {
     });
   },
 
-  //add to Story
-  toggleStory(userId, url, callback) {
-    var url = 'http://' + config.url + ':8000/toggleStory?userId=' + userId + '&url=' + url;
+  //add to Stream
+  toggleStream(userId, url, callback) {
+    var url = 'http://' + config.url + ':8000/toggleStream?userId=' + userId + '&url=' + url;
     return fetch(url, {
       method: 'GET',
       headers: {
