@@ -147,6 +147,25 @@ module.exports = {
     });
   },
 
+  toggleStory: function(req, res, next) {
+    var url = req.query.url;
+    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) }, function(err, user) {
+      if (err) next(err);
+      if (!user) {
+        console.error('User was not found');
+      } else {
+        if (user.stories.indexOf(url) === -1) {
+          user.stories.push(url);
+        } else {
+          user.stories.splice(user.stories.indexOf(url), 1);
+        }
+        user.save(function(err, savedUser) {
+          res.json();
+        });
+      }
+    });
+  },
+
   getPhotoData: function(req, res, next) {
     var currentUserId = req.query.userId;
     Photo.findOne({ url: req.query.url }, function(err, photo) {
