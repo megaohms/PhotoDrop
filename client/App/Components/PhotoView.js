@@ -21,6 +21,7 @@ class PhotoView extends React.Component{
     this.state = {
       touched: false,
       favorited: false,
+      streamed: false,
       uploader: undefined,
       views: undefined,
       url: this.props.uri || this.props.route.uri,
@@ -31,13 +32,21 @@ class PhotoView extends React.Component{
       this.setState({
         views: data.views,
         uploader: data.username,
-        favorited: data.favorited
+        favorited: data.favorited,
+        streamed: data.streamed 
       })
     })
   }
 
+
   componentWillUnmount() {
     if(this.props.showStatusBar) {this.props.showStatusBar();}
+  }
+  
+  _streamImage() {
+    api.toggleStream(this.state.userId, this.state.url, (result) => {
+      this.state.streamed ? this.setState({streamed:false}) : this.setState({streamed:true})
+    });
   }
 
   _closeImage() {
@@ -132,6 +141,9 @@ class PhotoView extends React.Component{
                 </TouchableOpacity>
               </View>
               <View style={styles.rightContainer}>
+                <TouchableOpacity onPress={this._streamImage.bind(this)} style={styles.closeButton}>
+                  <IconIon name="ion-waterdrop" size={45} color="white" style={styles.closeIcon} />
+                </TouchableOpacity>
                 <TouchableOpacity onPress={this._favoriteImage.bind(this)} style={styles.favoriteButton}>
                   {this.state.favorited ? <Icon name="heart" size={20} color="white" style={styles.favoriteIcon} /> : <Icon name="heart-o" size={20} color="white" style={styles.favoriteIcon} />}
                 </TouchableOpacity>
