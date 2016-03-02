@@ -121,7 +121,7 @@ class Map extends React.Component {
           region={this.state}
           showsUserLocation={true}
           scrollEnabled={false}
-          zoomEnabled={false}
+          // zoomEnabled={false}
           rotateEnabled={false}
           maxDelta={0.003}
         >
