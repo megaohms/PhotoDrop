@@ -193,6 +193,22 @@ var api = {
     });
   },
 
+  //add to Story
+  toggleStory(userId, url, callback) {
+    var url = 'http://' + config.url + ':8000/toggleStory?userId=' + userId + '&url=' + url;
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(function(result) {
+      callback(result._bodyInit);
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+  },
+
   getPhotoData(url, userId, callback) {
     var url = 'http://' + config.url + ':8000/getPhotoData?url=' + url + '&userId=' + userId;
     return fetch(url, {
