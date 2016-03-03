@@ -3,6 +3,7 @@ var NavigationBar = require('react-native-navbar');
 var Keychain = require('react-native-keychain');
 var Login = require('./Login');
 var PhotosView = require('./PhotosView');
+var FriendsView = require('./FriendsView');
 var ChangeView = require('./ChangeView');
 
 var {
@@ -24,6 +25,15 @@ class Settings extends React.Component {
   openMyPhotos() {
     this.props.navigator.push({
       component: PhotosView,
+      userId: this.props.userId,
+      favorites: true,
+      previousComponent: 'settings'
+    });
+  }
+
+  openFindFriends() {
+    this.props.navigator.push({
+      component: FriendsView,
       userId: this.props.userId,
       favorites: true,
       previousComponent: 'settings'
@@ -84,7 +94,7 @@ class Settings extends React.Component {
           <TouchableHighlight
             style={styles.touchableHighlightButton}
             underlayColor={'#e66365'}
-            onPress={this.openMyPhotos.bind(this)}
+            onPress={this.openFindFriends.bind(this)}
           >
             <Text style={styles.touchableHighlightText}>Friends</Text>
           </TouchableHighlight>
