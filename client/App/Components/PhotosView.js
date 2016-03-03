@@ -5,6 +5,21 @@ var api = require('../Utils/api');
 var IconIon = require('react-native-vector-icons/Ionicons');
 var PhotoSwiperView = require('./PhotoSwiperView');
 
+/*
+  The big picture for favorites photos:
+  
+  Needs a api.fetchUserFavorites function to grab the favorites.
+
+  Uses the api.fetchUserFavorites, and sets the this.state.userFavoritesUrls to the photosArr.
+
+  _onChange() -> the imageUrls image is this.setState => imageUrls: this.state.userFavoritesUrls
+
+  _onRefresh() -> sets api.fetchUserFavorites sets -> this.setState({ userFavoritesUrls: photosArr });
+      else if(this.state.selectedIndex===1) {
+        this.setState({imageUrls: this.state.userFavoritesUrls});
+        
+*/
+
 var {
   Navigator,
   StyleSheet,
@@ -36,9 +51,12 @@ class PhotosView extends React.Component{
       longitude: this.props.route.longitude,
       statusBarHidden: false,
       favorites: this.props.route.favorites,
+      streams: this.props.route.streams,
       selectedIndex: 0,
       userPhotosUrls: undefined,
       userFavoritesUrls: undefined,
+      // NEW: Add a streams Url, to add in the collection of Url of streams
+      userStreamsUrls: undefined,
       allViewablePhotos: undefined,
       isRefreshing: false,
     };
@@ -50,6 +68,22 @@ class PhotosView extends React.Component{
       api.fetchUserPhotos(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {
+          return photo.url;
+        });
+        this.setState({ imageUrls: photosUrls });
+        this.setState({ userPhotosUrls: photosUrls });
+      })
+    } else if ( this.state.streams ) {
+      // NEW: grab streams photos
+        // TODO: needs a function in api called api.fetchUserStreams
+        // set the userStreamsUrls as the collection of photos
+        api.fetchUserStreams(this.state.userId, (photos) => {
+          var photosArr = JSON.parse(photos);
+          this.setState({ userStreamsUrls: photosArr });
+        })
+        api.fetchUserPhotos(this.state.userId, (photos) => {
+          var photosArr = JSON.parse(photos);
+          var photosUrls = photosArr.map((photo) => {
           return photo.url;
         });
         this.setState({ imageUrls: photosUrls });
@@ -159,6 +193,9 @@ class PhotosView extends React.Component{
         this.setState({ imageUrls: this.state.userPhotosUrls});
     } else if(event.nativeEvent.selectedSegmentIndex===1) {
         this.setState({ imageUrls: this.state.userFavoritesUrls});
+        // NEW: Add the streams imageUrls
+    } else if(event.nativeEvent.selectedSegmentIndex===2) {
+        this.setState({ imageUrls: this.state.userStreamsUrls});
     }
   }
 
@@ -181,6 +218,9 @@ class PhotosView extends React.Component{
         this.setState({imageUrls: this.state.userPhotosUrls});
       } else if(this.state.selectedIndex===1) {
         this.setState({imageUrls: this.state.userFavoritesUrls});
+        // NEW: Add stream imageUrls selection here
+      } else if(this.state.selectedIndex===2) {
+        this.setState({imageUrls: this.state.userStreamsUrls});
       }
     } else {
       navigator.geolocation.getCurrentPosition(
@@ -208,6 +248,7 @@ class PhotosView extends React.Component{
   }
 
   render() {
+    // MAYBE: Do I need to add a this.state.streams here to render in the <TEXT></TEXT>? 
     var pageTitle = (
        this.state.favorites ? <Text style={styles.pageTitle}>Your Photos</Text> : <Text style={styles.pageTitle}>Photos Near You</Text>
     )
@@ -225,7 +266,7 @@ class PhotosView extends React.Component{
             statusBar={{hidden: this.state.statusBarHidden}}
             leftButton={backButton}/>
           <SegmentedControlIOS 
-            values={['Uploaded By You', 'Favorited']} 
+            values={['Uploaded By You', 'Favorited', 'Streams']} 
             selectedIndex={this.state.selectedIndex} 
             style={styles.segments} 
             tintColor="#FF5A5F"
@@ -236,6 +277,9 @@ class PhotosView extends React.Component{
           
           {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no favorite photos...</Text>   : null}
           {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
+
+          {this.state.imageUrls && this.state.selectedIndex===2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no streams photos...</Text>   : null}
+          {this.state.imageUrls && this.state.selectedIndex===2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
           
           
 
