@@ -31,10 +31,6 @@ bower_components/
 
 .vscode/
 
-#client/ios/PhotoDrop.xcodeproj/project.pbxproj
-#client/ios/PhotoDrop.xcodeproj/xcshareddata/xcschemes/ProfoundMongoose.xcscheme
-#client/ios/ProfoundMongoose/AppDelegate.m
-
 # OSX
 #
 .DS_Store
@@ -57,6 +53,3 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-
-client/App/Utils/config.js
-
