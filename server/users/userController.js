@@ -154,10 +154,10 @@ module.exports = {
       if (!user) {
         console.error('User was not found');
       } else {
-        if (user.stories.indexOf(url) === -1) {
-          user.stories.push(url);
+        if (user.streams.indexOf(url) === -1) {
+          user.streams.push(url);
         } else {
-          user.stories.splice(user.stories.indexOf(url), 1);
+          user.streams.splice(user.streams.indexOf(url), 1);
         }
         user.save(function(err, savedUser) {
           res.json();
