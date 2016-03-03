@@ -5,6 +5,21 @@ var api = require('../Utils/api');
 var IconIon = require('react-native-vector-icons/Ionicons');
 var PhotoSwiperView = require('./PhotoSwiperView');
 
+/*
+  The big picture for favorites photos:
+  
+  Needs a api.fetchUserFavorites function to grab the favorites.
+
+  Uses the api.fetchUserFavorites, and sets the this.state.userFavoritesUrls to the photosArr.
+
+  _onChange() -> the imageUrls image is this.setState => imageUrls: this.state.userFavoritesUrls
+
+  _onRefresh() -> sets api.fetchUserFavorites sets -> this.setState({ userFavoritesUrls: photosArr });
+      else if(this.state.selectedIndex===1) {
+        this.setState({imageUrls: this.state.userFavoritesUrls});
+        
+*/
+
 var {
   Navigator,
   StyleSheet,
@@ -233,6 +248,7 @@ class PhotosView extends React.Component{
   }
 
   render() {
+    // MAYBE: Do I need to add a this.state.streams here to render in the <TEXT></TEXT>? 
     var pageTitle = (
        this.state.favorites ? <Text style={styles.pageTitle}>Your Photos</Text> : <Text style={styles.pageTitle}>Photos Near You</Text>
     )
