@@ -75,11 +75,18 @@ class Settings extends React.Component {
         </View>
         <View style={styles.mainContainer}>
           <TouchableHighlight
-            style={styles.yourPhotosButton}
+            style={styles.touchableHighlightButton}
             underlayColor={'#e66365'}
             onPress={this.openMyPhotos.bind(this)}
           >
-            <Text style={styles.yourPhotosButtonText}>Your Photos</Text>
+            <Text style={styles.touchableHighlightText}>Your Photos</Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.touchableHighlightButton}
+            underlayColor={'#e66365'}
+            onPress={this.openMyPhotos.bind(this)}
+          >
+            <Text style={styles.touchableHighlightText}>Friends</Text>
           </TouchableHighlight>
           <TouchableOpacity
             style={styles.button}
@@ -101,7 +108,7 @@ class Settings extends React.Component {
 }
 
 var styles = StyleSheet.create({
-  yourPhotosButtonText: {
+  touchableHighlightText: {
     fontSize: 18,
     fontFamily: 'circular',
     color: 'white',
@@ -113,14 +120,14 @@ var styles = StyleSheet.create({
     color: '#565b5c',
     alignSelf: 'center'
   },
-  yourPhotosButton: {
+  touchableHighlightButton: {
     height: 45,
     flexDirection: 'row',
     backgroundColor: '#FF5A5F',
     borderColor: '#FF5A5F',
     borderWidth: 1,
     borderRadius: 4,
-    marginBottom: 22.5,
+    marginBottom: 7.5,
     marginTop: 0,
     alignSelf: 'stretch',
     justifyContent: 'center'
@@ -138,12 +145,12 @@ var styles = StyleSheet.create({
     justifyContent: 'center'
   },
   imageContainer: {
-    flex: 2,
+    flex: 1,
     paddingRight: 30,
     paddingLeft: 30,
-    paddingTop: 30,
+    paddingTop: 10,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   mainContainer: {
