@@ -22,7 +22,38 @@ dist/
 # Dependency directorys
 # Deployed apps should consider commenting these lines out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+
+# node.js
+npm-debug.log
 node_modules/
+
 bower_components/
 
-client/ios/ProfoundMongoose/AppDelegate.m
+.vscode/
+
+#client/ios/PhotoDrop.xcodeproj/project.pbxproj
+#client/ios/PhotoDrop.xcodeproj/xcshareddata/xcschemes/ProfoundMongoose.xcscheme
+#client/ios/ProfoundMongoose/AppDelegate.m
+
+# OSX
+#
+.DS_Store
+
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
