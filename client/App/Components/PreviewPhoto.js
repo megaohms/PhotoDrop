@@ -70,8 +70,11 @@ class PreviewPhoto extends React.Component {
             <TouchableOpacity onPress={_.once(this._cancelImage.bind(this))} style={styles.noButton}>
               <IconIon name="ios-close-empty" size={60} color="#FC9396" style={styles.noIcon} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={_.once(this._sendImage.bind(this))} style={styles.yesButton}>
-              <IconIon name="ios-checkmark-empty" size={60} color="#036C69" style={styles.yesIcon} />
+            <TouchableOpacity onPress={_.once(this._sendImage.bind(this))} >
+              <IconIon name="earth" size={60} color="#036C69" style={styles.earthButton} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={_.once(this._sendImage.bind(this))} style={styles.friendsButton}>
+              <IconIon name="ios-people" size={60} color="#036C69" style={styles.yesIcon} />
             </TouchableOpacity>
           </View>
 
@@ -96,7 +99,13 @@ var styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-  yesButton: {
+  earthButton: {
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    backgroundColor: 'blue'
+  },
+  friendsButton: {
     width: 50,
     height: 50,
     backgroundColor: 'transparent',
@@ -110,13 +119,13 @@ var styles = StyleSheet.create({
   yesIcon: {
     width: 60,
     height: 60,
-    marginLeft: 37
+    marginLeft: 0
   },
   noButton: {
     width: 50,
     height: 50,
-    backgroundColor: 'transparent',
-    borderRadius: 35,
+    backgroundColor: 'white',
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
