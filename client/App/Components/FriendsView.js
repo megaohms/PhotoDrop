@@ -43,7 +43,8 @@ class PhotosView extends React.Component{
       userFavoritesUrls: undefined,
       allViewablePhotos: undefined,
       isRefreshing: false,
-      searchInput: undefined
+      searchInput: undefined,
+      foundUsers: []
     };
     if(this.state.friends) {
       api.fetchUserFavorites(this.state.userId, (photos) => {
@@ -102,8 +103,23 @@ class PhotosView extends React.Component{
   }
 
   searchForUser() {
-    /*this.searchInput*/
+    api.fetchUsersBySearchInput(this.state.searchInput, (foundUsers) => {
+      foundUsers = JSON.parse(foundUsers)
+      this.setState({
+        foundUsers: foundUsers
+      })
+    });
+  }
 
+  addFriend(friendId) {
+    console.log('userId inside addFriend', friendId)
+    api.addFriend(this.state.userId, friendId, (err, body) => {
+      if (err) {
+        console.error(err)
+      } else {
+        console.log('friend added');
+      }
+    })
   }
 
   calculatedSize() {
@@ -140,19 +156,21 @@ class PhotosView extends React.Component{
     this.setState({statusBarHidden: false});
   }
 
-  renderRow(images) {
-    return images.map((uri, index) => {
+  renderRow(foundUsers) {
+    return foundUsers.map((user, index) => {
       return (
         // Hardcoded key value for each element below to dismiss eror message
-        <View style={styles.row} key={index}>
-          <Text style={styles.foundUser}>Hello</Text>
-          <TouchableHighlight style={styles.addFriendButton} underlayColor={'#FC9396'}>
+        <View style={styles.row} key={user._id}>
+          <Text style={styles.foundUser}>{user.username}</Text>
+          <TouchableHighlight onPress={() => {this.addFriend.bind(this)(user._id)}} style={styles.addFriendButton} underlayColor={'#FC9396'}>
             <IconIon name="ios-plus-empty" size={40} color="#FF5A5F" style={styles.addFriendIcon} />
           </TouchableHighlight>
         </View>
       )
     })
   }
+
+
 
   renderImagesInGroupsOf(count) {
     return _.chunk(IMAGE_URLS, IMAGES_PER_ROW).map((imagesForRow) => {
@@ -227,14 +245,13 @@ class PhotosView extends React.Component{
 
   render() {
     var pageTitle = (
-       this.state.friends ? <Text style={styles.pageTitle}>Your Photos</Text> : <Text style={styles.pageTitle}>Photos Near You</Text>
+       <Text style={styles.pageTitle}>Friends</Text>
     )
     var backButton = (
       <TouchableHighlight onPress={this._backButton.bind(this)} underlayColor={'white'}>
         <IconIon name='ios-arrow-thin-down' size={30} style={styles.backIcon} color="#FF5A5F"/>
       </TouchableHighlight>
     );
-    if(this.state.friends) {
       return (
         <View style={{flex: 1, backgroundColor: '#ededed' }}>
           <NavigationBar 
@@ -275,38 +292,10 @@ class PhotosView extends React.Component{
                 title="Refreshing..."
               />
             }>
-            {this.state.imageUrls ? this.renderRow(this.state.imageUrls) : null}
+            {this.state.imageUrls ? this.renderRow(this.state.foundUsers) : null}
           </ScrollView>
         </View>
       ); 
-    } else {
-      return (
-        <View style={{flex: 1, backgroundColor: '#ededed' }}>
-          <NavigationBar 
-            title={pageTitle} 
-            tintColor={"white"} 
-            statusBar={{hidden: this.state.statusBarHidden}}
-            leftButton={backButton}/>
-          {this.state.imageUrls ? null : <ActivityIndicatorIOS size={'large'} style={[styles.centering, {height: 550}]} />}
-          {this.state.imageUrls && !this.state.imageUrls.length  ? <Text style={styles.noPhotosText}>Looks like there are no photos near you...</Text>   : null}
-          {this.state.imageUrls && !this.state.imageUrls.length  ? <Text style={styles.noPhotosText2}>Be the first one to drop a photo!</Text>  : null}
-          
-          
-          <ScrollView
-            onLayout={this.handleRotation.bind(this)} 
-            contentContainerStyle={styles.scrollView}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this._onRefresh.bind(this)}
-                title="Refreshing..."
-              />
-            }>
-            {this.state.imageUrls ? this.renderRow(this.state.imageUrls) : null}
-          </ScrollView>
-        </View>
-      ); 
-    }
   }
 }
 

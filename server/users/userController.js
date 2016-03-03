@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var Photo = require('./../photos/photoModel');
 
 var findUser = Q.nbind(User.findOne, User);
+var findUsers = Q.nbind(User.find, User);
 var createUser = Q.nbind(User.create, User);
 
 module.exports = {
@@ -201,6 +202,32 @@ module.exports = {
         res.json(user.favorites);
       }
     });
+  },
+
+  fetchUsers: function(req, res, next) {
+    var username = req.query.search;
+    findUsers({ username: username }, function (err, foundUsers) {
+      if (err) {
+        next(err);
+      }
+      if (!foundUsers) {
+        res.statusCode(404).res('Couldn\'t find any matching users');
+      } else {
+        res.send(foundUsers);
+      }
+    });
+  },
+
+  addFriend: function(req, res, next) {
+    var friendRequest = JSON.parse(Object.keys(req.body)[0]);
+    console.log(friendRequest);
+
+    res.send();
+  },
+
+  fetchFriends: function(req, res, next) {
+    
+
   }
 
 };
