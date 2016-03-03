@@ -7,6 +7,8 @@ var {
   Navigator
 } = React;
 
+console.ignoredYellowBox = ['jsSchedulingOverhead'];
+
 class PhotoDrop extends React.Component {
   render() {
     return (
