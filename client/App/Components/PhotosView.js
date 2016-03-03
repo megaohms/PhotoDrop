@@ -225,7 +225,7 @@ class PhotosView extends React.Component{
             statusBar={{hidden: this.state.statusBarHidden}}
             leftButton={backButton}/>
           <SegmentedControlIOS 
-            values={['Uploaded By You', 'Favorited']} 
+            values={['Uploaded By You', 'Favorited', 'Streams']} 
             selectedIndex={this.state.selectedIndex} 
             style={styles.segments} 
             tintColor="#FF5A5F"
@@ -236,6 +236,9 @@ class PhotosView extends React.Component{
           
           {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no favorite photos...</Text>   : null}
           {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
+
+          {this.state.imageUrls && this.state.selectedIndex===2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no streams photos...</Text>   : null}
+          {this.state.imageUrls && this.state.selectedIndex===2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
           
           
 
