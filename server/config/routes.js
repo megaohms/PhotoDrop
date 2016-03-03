@@ -20,7 +20,7 @@ module.exports = function(app, express) {
   // Increment views count on photo and add to Favorites
   app.get('/incrementViews/', photoController.incrementViews);
   app.get('/toggleFavorite/', userController.toggleFavorite);
-  //toggleStory from userInterface
+  //toggleStream from userInterface
   app.get('/toggleStream/', userController.toggleStream);
   app.get('/getPhotoData/', userController.getPhotoData);
 
