@@ -34,3 +34,5 @@ node_modules/
 npm-debug.log
 android/
 index.android.js
+
+.vscode/
