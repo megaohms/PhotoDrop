@@ -2,6 +2,7 @@ var React = require('react-native');
 var NavigationBar = require('react-native-navbar');
 var _ = require('lodash');
 var api = require('../Utils/api');
+var Icon = require('react-native-vector-icons/FontAwesome');
 var IconIon = require('react-native-vector-icons/Ionicons');
 var PhotoSwiperView = require('./PhotoSwiperView');
 
@@ -143,9 +144,12 @@ class PhotosView extends React.Component{
     return images.map((uri, index) => {
       return (
         // Hardcoded key value for each element below to dismiss eror message
-        <TouchableHighlight key={index} onPress={this.showImageFullscreen(uri, index)}>
-          <Image style={[styles.image, this.calculatedSize()]} source={{uri: uri}} />
-        </TouchableHighlight>
+        <View style={styles.row} key={index}>
+          <Text style={styles.foundUser}>Hello</Text>
+          <TouchableHighlight style={styles.addFriendButton} underlayColor={'#FC9396'}>
+            <IconIon name="ios-plus-empty" size={40} color="#FF5A5F" style={styles.addFriendIcon} />
+          </TouchableHighlight>
+        </View>
       )
     })
   }
@@ -288,7 +292,7 @@ class PhotosView extends React.Component{
           {this.state.imageUrls && !this.state.imageUrls.length  ? <Text style={styles.noPhotosText2}>Be the first one to drop a photo!</Text>  : null}
           
           
-          <ScrollView 
+          <ScrollView
             onLayout={this.handleRotation.bind(this)} 
             contentContainerStyle={styles.scrollView}
             refreshControl={
@@ -319,6 +323,47 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     color: '#616161'
   },
+  foundUserRow: {
+    marginTop: 10,
+    marginBottom: 15,
+    fontSize: 18,
+    alignItems: 'flex-start',
+    fontFamily: 'circular',
+    textAlign: 'left',
+    color: '#616161'
+  },
+  scrollView: {
+    flexDirection: 'column',
+    alignItems: 'stretch'
+  },
+  row: {
+    flexDirection: 'row'
+  },
+  foundUser: {
+    flex: 4,
+    marginTop: 10,
+    marginBottom: 15,
+    fontSize: 18,
+    paddingLeft: 10,
+    fontFamily: 'circular',
+    textAlign: 'left',
+    color: '#616161'
+  },
+  addFriendButton: {
+    flex: 1,
+    width: 50,
+    height: 50,
+    alignSelf: 'flex-end',
+    backgroundColor: 'transparent',
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#ededed'
+  },
+  addFriendIcon: {
+    width: 25,
+    height: 38,
+    backgroundColor: 'transparent'
+  },
   userInput: {
     marginLeft: 30,
     marginRight: 30,
@@ -347,15 +392,6 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     color: '#656565',
     fontFamily: 'circular'
-  },
-  scrollView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
   },
   image: {
     borderWidth: 1,
