@@ -36,9 +36,12 @@ class PhotosView extends React.Component{
       longitude: this.props.route.longitude,
       statusBarHidden: false,
       favorites: this.props.route.favorites,
+      streams: this.props.route.streams,
       selectedIndex: 0,
       userPhotosUrls: undefined,
       userFavoritesUrls: undefined,
+      // NEW: Add a streams Url, to add in the collection of Url of streams
+      userStreamsUrls: undefined,
       allViewablePhotos: undefined,
       isRefreshing: false,
     };
@@ -50,6 +53,22 @@ class PhotosView extends React.Component{
       api.fetchUserPhotos(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {
+          return photo.url;
+        });
+        this.setState({ imageUrls: photosUrls });
+        this.setState({ userPhotosUrls: photosUrls });
+      })
+    } else if ( this.state.streams ) {
+      // NEW: grab streams photos
+        // TODO: needs a function in api called api.fetchUserStreams
+        // set the userStreamsUrls as the collection of photos
+        api.fetchUserStreams(this.state.userId, (photos) => {
+          var photosArr = JSON.parse(photos);
+          this.setState({ userStreamsUrls: photosArr });
+        })
+        api.fetchUserPhotos(this.state.userId, (photos) => {
+          var photosArr = JSON.parse(photos);
+          var photosUrls = photosArr.map((photo) => {
           return photo.url;
         });
         this.setState({ imageUrls: photosUrls });
@@ -159,6 +178,9 @@ class PhotosView extends React.Component{
         this.setState({ imageUrls: this.state.userPhotosUrls});
     } else if(event.nativeEvent.selectedSegmentIndex===1) {
         this.setState({ imageUrls: this.state.userFavoritesUrls});
+        // NEW: Add the streams imageUrls
+    } else if(event.nativeEvent.selectedSegmentIndex===2) {
+        this.setState({ imageUrls: this.state.userStreamsUrls});
     }
   }
 
@@ -181,6 +203,9 @@ class PhotosView extends React.Component{
         this.setState({imageUrls: this.state.userPhotosUrls});
       } else if(this.state.selectedIndex===1) {
         this.setState({imageUrls: this.state.userFavoritesUrls});
+        // NEW: Add stream imageUrls selection here
+      } else if(this.state.selectedIndex===2) {
+        this.setState({imageUrls: this.state.userStreamsUrls});
       }
     } else {
       navigator.geolocation.getCurrentPosition(
