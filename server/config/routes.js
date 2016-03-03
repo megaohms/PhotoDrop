@@ -21,7 +21,7 @@ module.exports = function(app, express) {
   app.get('/incrementViews/', photoController.incrementViews);
   app.get('/toggleFavorite/', userController.toggleFavorite);
   //toggleStory from userInterface
-  app.get('/toggleStory/', userController.toggleStory);
+  app.get('/toggleStream/', userController.toggleStream);
   app.get('/getPhotoData/', userController.getPhotoData);
 
   // Sign in and sign up routes

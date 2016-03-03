@@ -147,7 +147,7 @@ module.exports = {
     });
   },
 
-  toggleStory: function(req, res, next) {
+  toggleStream: function(req, res, next) {
     var url = req.query.url;
     User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) }, function(err, user) {
       if (err) next(err);
@@ -182,7 +182,8 @@ module.exports = {
                 console.error('User was not found 2');
               } else {
                 var favorited = (user.favorites.indexOf(req.query.url) === -1);
-                res.json({ username: user.username, views: photo.views, favorited: !favorited });
+                var streamed = (user.streams.indexOf(req.query.url) === -1);
+                res.json({ username: user.username, views: photo.views, favorited: !favorited, streamed: !streamed });
               }
             });
           }
