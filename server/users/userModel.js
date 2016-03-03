@@ -19,6 +19,10 @@ var UserSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  streams: {
+    type: Array,
+    default: []
+  },
   salt: String
 });
 

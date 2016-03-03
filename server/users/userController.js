@@ -147,6 +147,25 @@ module.exports = {
     });
   },
 
+  toggleStream: function(req, res, next) {
+    var url = req.query.url;
+    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) }, function(err, user) {
+      if (err) next(err);
+      if (!user) {
+        console.error('User was not found');
+      } else {
+        if (user.streams.indexOf(url) === -1) {
+          user.streams.push(url);
+        } else {
+          user.streams.splice(user.streams.indexOf(url), 1);
+        }
+        user.save(function(err, savedUser) {
+          res.json();
+        });
+      }
+    });
+  },
+
   getPhotoData: function(req, res, next) {
     var currentUserId = req.query.userId;
     Photo.findOne({ url: req.query.url }, function(err, photo) {
@@ -163,7 +182,8 @@ module.exports = {
                 console.error('User was not found 2');
               } else {
                 var favorited = (user.favorites.indexOf(req.query.url) === -1);
-                res.json({ username: user.username, views: photo.views, favorited: !favorited });
+                var streamed = (user.streams.indexOf(req.query.url) === -1);
+                res.json({ username: user.username, views: photo.views, favorited: !favorited, streamed: !streamed });
               }
             });
           }

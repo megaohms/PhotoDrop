@@ -21,6 +21,7 @@ class PhotoView extends React.Component{
     this.state = {
       touched: false,
       favorited: false,
+      streamed: false,
       uploader: undefined,
       views: undefined,
       url: this.props.uri || this.props.route.uri,
@@ -31,13 +32,21 @@ class PhotoView extends React.Component{
       this.setState({
         views: data.views,
         uploader: data.username,
-        favorited: data.favorited
+        favorited: data.favorited,
+        streamed: data.streamed 
       })
     })
   }
 
+
   componentWillUnmount() {
     if(this.props.showStatusBar) {this.props.showStatusBar();}
+  }
+  
+  _streamImage() {
+    api.toggleStream(this.state.userId, this.state.url, (result) => {
+      this.state.streamed ? this.setState({streamed:false}) : this.setState({streamed:true})
+    });
   }
 
   _closeImage() {
@@ -99,6 +108,9 @@ class PhotoView extends React.Component{
                 </TouchableOpacity>
               </View>
               <View style={styles.rightContainer}>
+                <TouchableOpacity onPress={this._streamImage.bind(this)} style={styles.streamButton}>
+                  {this.state.streamed ? <IconIon name="ios-minus-outline" size={65} color="white" style={styles.streamIcon} /> : <IconIon name="ios-plus-outline" size={65} color="white" style={styles.streamIcon} />}
+                </TouchableOpacity>
                 <TouchableOpacity onPress={this._favoriteImage.bind(this)} style={styles.favoriteButton}>
                   {this.state.favorited ? <Icon name="heart" size={20} color="white" style={styles.favoriteIcon} /> : <Icon name="heart-o" size={20} color="white" style={styles.favoriteIcon} />}
                 </TouchableOpacity>
@@ -132,6 +144,9 @@ class PhotoView extends React.Component{
                 </TouchableOpacity>
               </View>
               <View style={styles.rightContainer}>
+                <TouchableOpacity onPress={this._streamImage.bind(this)} style={styles.streamButton}>
+                  {this.state.streamed ? <IconIon name="ios-minus-outline" size={65} color="white" style={styles.streamIcon} /> : <IconIon name="ios-plus-outline" size={65} color="white" style={styles.streamIcon} />}
+                </TouchableOpacity>
                 <TouchableOpacity onPress={this._favoriteImage.bind(this)} style={styles.favoriteButton}>
                   {this.state.favorited ? <Icon name="heart" size={20} color="white" style={styles.favoriteIcon} /> : <Icon name="heart-o" size={20} color="white" style={styles.favoriteIcon} />}
                 </TouchableOpacity>
@@ -213,6 +228,19 @@ var styles = StyleSheet.create({
     marginTop: 15,
     marginRight: 5,
   },
+  //new
+  streamButton:{
+    width:50,
+    height:50,
+    backgroundColor:'rgba(0,0,0,0.3)',
+    borderRadius:35,
+    alignItems:'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+    marginTop: 15,
+    marginRight: 5,
+  },
   closeIcon:{
     width:60,
     height:60,
@@ -230,6 +258,13 @@ var styles = StyleSheet.create({
     height:35,
     paddingTop: 7.5,
     paddingLeft: 7.5
+  },
+  //new
+  streamIcon:{
+    width:35,
+    height:35,
+    paddingTop: -15,
+    paddingLeft: -9
   },
   photoInfoContainer:{
     position: 'absolute',

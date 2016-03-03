@@ -7,7 +7,9 @@ var {
   Navigator
 } = React;
 
-class ProfoundMongoose extends React.Component {
+console.ignoredYellowBox = ['jsSchedulingOverhead'];
+
+class PhotoDrop extends React.Component {
   render() {
     return (
       <Navigator
@@ -30,4 +32,4 @@ class ProfoundMongoose extends React.Component {
   }
 }
 
-AppRegistry.registerComponent('ProfoundMongoose', () => ProfoundMongoose);
+AppRegistry.registerComponent('PhotoDrop', () => PhotoDrop);

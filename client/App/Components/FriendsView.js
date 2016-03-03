@@ -12,6 +12,7 @@ var {
   Text,
   Dimensions,
   Image,
+  TextInput,
   ScrollView,
   ActivityIndicatorIOS,
   StatusBarIOS,
@@ -35,14 +36,15 @@ class PhotosView extends React.Component{
       latitude: this.props.route.latitude,
       longitude: this.props.route.longitude,
       statusBarHidden: false,
-      favorites: this.props.route.favorites,
+      friends: this.props.route.favorites,
       selectedIndex: 0,
       userPhotosUrls: undefined,
       userFavoritesUrls: undefined,
       allViewablePhotos: undefined,
       isRefreshing: false,
+      searchInput: undefined
     };
-    if(this.state.favorites) {
+    if(this.state.friends) {
       api.fetchUserFavorites(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
         this.setState({ userFavoritesUrls: photosArr });
@@ -75,7 +77,7 @@ class PhotosView extends React.Component{
   }
 
   componentDidMount() {
-    if(this.state.favorites){
+    if(this.state.friends){
       this.setState({ imageUrls: this.state.userPhotosUrls});
     } else {
       this.setState({ imageUrls: this.state.allViewablePhotos});
@@ -90,6 +92,17 @@ class PhotosView extends React.Component{
   handleRotation(event) {
     var layout = event.nativeEvent.layout;
     this.setState({ currentScreenWidth: layout.width, currentScreenHeight: layout.height });
+  }
+
+  handleSearchInput(event) {
+    this.setState({
+      searchInput: event.nativeEvent.text
+    });
+  }
+
+  searchForUser() {
+    /*this.searchInput*/
+
   }
 
   calculatedSize() {
@@ -131,21 +144,22 @@ class PhotosView extends React.Component{
       return (
         // Hardcoded key value for each element below to dismiss eror message
         <TouchableHighlight key={index} onPress={this.showImageFullscreen(uri, index)}>
-          <Image key={index} style={[styles.image, this.calculatedSize()]} source={{uri: uri}} />
+          <Image style={[styles.image, this.calculatedSize()]} source={{uri: uri}} />
         </TouchableHighlight>
       )
     })
   }
 
   renderImagesInGroupsOf(count) {
-    return _.chunk(IMAGE_URLS, IMAGES_PER_ROW).map((imagesForRow, index) => {
+    return _.chunk(IMAGE_URLS, IMAGES_PER_ROW).map((imagesForRow) => {
       return (
-        <View style={styles.row} key={index}>
+        <View style={styles.row}>
           {this.renderRow(imagesForRow)}
         </View>
       )
     })
   }
+
 
   _backButton() {
     this.props.navigator.pop();
@@ -164,10 +178,10 @@ class PhotosView extends React.Component{
 
   _onRefresh() {
     this.setState({isRefreshing: true});
-    if(this.state.favorites) {
-      api.fetchUserFavorites(this.state.userId, (photos) => {
+    if(this.state.friends) {
+      api.fetchUserfavorites(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
-        this.setState({ userFavoritesUrls: photosArr });
+        this.setState({ userfavoritesUrls: photosArr });
       })
       api.fetchUserPhotos(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
@@ -209,14 +223,14 @@ class PhotosView extends React.Component{
 
   render() {
     var pageTitle = (
-       this.state.favorites ? <Text style={styles.pageTitle}>Your Photos</Text> : <Text style={styles.pageTitle}>Photos Near You</Text>
+       this.state.friends ? <Text style={styles.pageTitle}>Your Photos</Text> : <Text style={styles.pageTitle}>Photos Near You</Text>
     )
     var backButton = (
       <TouchableHighlight onPress={this._backButton.bind(this)} underlayColor={'white'}>
         <IconIon name='ios-arrow-thin-down' size={30} style={styles.backIcon} color="#FF5A5F"/>
       </TouchableHighlight>
     );
-    if(this.state.favorites) {
+    if(this.state.friends) {
       return (
         <View style={{flex: 1, backgroundColor: '#ededed' }}>
           <NavigationBar 
@@ -225,7 +239,7 @@ class PhotosView extends React.Component{
             statusBar={{hidden: this.state.statusBarHidden}}
             leftButton={backButton}/>
           <SegmentedControlIOS 
-            values={['Uploaded By You', 'Favorited']} 
+            values={['Find Friends', 'Your Friends']} 
             selectedIndex={this.state.selectedIndex} 
             style={styles.segments} 
             tintColor="#FF5A5F"
@@ -234,11 +248,19 @@ class PhotosView extends React.Component{
           {this.state.imageUrls && this.state.selectedIndex===0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>{`Looks like you haven't taken any photos...`}</Text>   : null}
           {this.state.imageUrls && this.state.selectedIndex===0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the camera and drop a photo!</Text>  : null}
           
-          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no favorite photos...</Text>   : null}
-          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
+          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Add friends so they can see your dropped photos!</Text>   : null}
           
-          
-
+          <TextInput
+            placeholder={'Search by username or phone number'}
+            autoCapitalize={'none'}
+            autoCorrect={false}
+            maxLength={16}
+            style={styles.userInput}
+            returnKeyType={'go'}
+            value={this.state.searchInput}
+            onChange={this.handleSearchInput.bind(this)}
+            onSubmitEditing={this.searchForUser.bind(this)}
+          />
           <ScrollView 
             onLayout={this.handleRotation.bind(this)} 
             contentContainerStyle={styles.scrollView}
@@ -288,6 +310,26 @@ var styles = StyleSheet.create({
   centering: {
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  fieldTitle: {
+    marginTop: 10,
+    marginBottom: 15,
+    fontSize: 18,
+    fontFamily: 'circular',
+    textAlign: 'center',
+    color: '#616161'
+  },
+  userInput: {
+    marginLeft: 30,
+    marginRight: 30,
+    padding: 5,
+    height: 50,
+    fontSize: 18,
+    fontFamily: 'circular',
+    borderWidth: 1,
+    borderColor: '#616161',
+    borderRadius: 4,
+    color: '#616161'
   },
   noPhotosText: {
     marginTop: 65,

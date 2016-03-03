@@ -57,3 +57,6 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+
+client/App/Utils/config.js
+
