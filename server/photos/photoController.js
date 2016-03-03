@@ -5,35 +5,16 @@ var mongoose = require('mongoose');
 module.exports = {
   // recieve base64 bit image in two POST request packets
   // send that file to imgur
-  uploadPhoto: (function() {
-    var currentPipes = {
-      // key pairs are the userId and the data.
-      userId: 'data'
-    };
-    return function(req, res, next) {
-      // check if it is first or second packet
-      var userId = req.body.userId;
-      if (currentPipes[userId] === undefined) {
-        currentPipes[userId] = req.body.data;
-        res.json();
-        // if the userId is there, we know that the photo is halfway upladed
-      } else if (currentPipes[userId]) {
-        var fullImgData = currentPipes[userId] + req.body.data;
-        // clear out userId data space for future images
-        currentPipes[userId] = undefined;
-        imgur.uploadBase64(fullImgData)
-          .then(function(json) {
-            req.imgurLink = json.data.link;
-            next();
-          })
-          .catch(function(err) {
-            console.error(err.message);
-            currentPipes[userId] = undefined;
-          });
-      }
-
-    };
-  })(),
+  uploadPhoto: function(req, res, next) {
+    imgur.uploadBase64(req.body.imageData)
+      .then(function(json) {
+        req.imgurLink = json.data.link;
+        next();
+      })
+      .catch(function(err) {
+        console.error(err.message);
+      });
+  },
 
   // save that photo as  a model in db
   savePhotoModelToDB: function(req, res, next) {
@@ -43,8 +24,10 @@ module.exports = {
         type: 'Point',
         coordinates: [req.body.longitude, req.body.latitude]
       },
+      visibility: req.body.visibility,
       userId: mongoose.mongo.ObjectID(req.body.userId)
-    }).save().then(function(data) {
+    }).save()
+    .then(function(data) {
       Photo.ensureIndexes({ loc: '2dsphere' });
       res.json();
     }).catch(function(err) {

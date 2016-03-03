@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 // reqire bodyparser middleware for dealing with POST requests
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true }));
+app.use(bodyParser.urlencoded({extended: true, limit: 100000000 }));
 
 mongoose.connect('mongodb://localhost:27017/photodrop');
 var db = mongoose.connection;
