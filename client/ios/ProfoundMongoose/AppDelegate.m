@@ -35,10 +35,10 @@
  //jsCodeLocation = [NSURL URLWithString:@"http://ENTERIP:8081/index.ios.bundle?platform=ios&dev=true"];
  
  //Colin
- //jsCodeLocation = [NSURL URLWithString:@"http://ENTERIP:8081/index.ios.bundle?platform=ios&dev=true"];
+ //jsCodeLocation = [NSURL URLWithString:@"http://10.6.30.148:8081/index.ios.bundle?platform=ios&dev=true"];
  
  //Daniel
- //jsCodeLocation = [NSURL URLWithString:@"http://ENTERIP:8081/index.ios.bundle?platform=ios&dev=true"];
+ //jsCodeLocation = [NSURL URLWithString:@"http://10.6.30.59:8081/index.ios.bundle?platform=ios&dev=true"];
  
  //Vince
  jsCodeLocation = [NSURL URLWithString:@"http://10.6.30.56:8081/index.ios.bundle?platform=ios&dev=true"];
