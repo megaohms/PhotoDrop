@@ -52,6 +52,11 @@ module.exports = {
     });
   },
 
+  // db.getCollection('photos').find({$or: [
+  //   {visibility: 2},
+  //   {$and: [{visibility: 0}, {userId: ObjectId("56d5efa4c13476226210daa1")}]}, <--the current User object ID
+  //   {$and: [{visibility: 1}, {userId: {$in: [ObjectId("56d77a3f953a6d9746d13115")]}}]} <--Array of object IDs of current user's friends
+  //   ]})
   // fetch all photos from DB
   fetchPhotos: function(req, res, next) {
     var maxDistance = Number(req.query.radius);
