@@ -26,6 +26,9 @@ class Map extends React.Component {
     super(props);
 
     this.state = {
+      //pass down current user's ID??
+      currentUser: null,
+      currentUserStream: [],
       latitude: this.props.params.latitude,
       longitude: this.props.params.longitude,
       latitudeDelta: 0.003,
@@ -42,6 +45,12 @@ class Map extends React.Component {
     api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta, (photos) => {
       var photosArr = JSON.parse(photos);
       this.setState({ photosLocations: photosArr });
+    });
+
+    api.fetchUserStreams(this.state.currentUser, function(streamedPhotos) {
+      //this does something with the 
+      var photoStream = JSON.parse(streamedPhotos);
+      this.setState({ currentUserStream: photoStream })
     });
   }
 
