@@ -12,6 +12,7 @@ var {
   Text,
   Dimensions,
   Image,
+  TextInput,
   ScrollView,
   ActivityIndicatorIOS,
   StatusBarIOS,
@@ -41,6 +42,7 @@ class PhotosView extends React.Component{
       userFavoritesUrls: undefined,
       allViewablePhotos: undefined,
       isRefreshing: false,
+      searchInput: undefined
     };
     if(this.state.friends) {
       api.fetchUserFavorites(this.state.userId, (photos) => {
@@ -90,6 +92,17 @@ class PhotosView extends React.Component{
   handleRotation(event) {
     var layout = event.nativeEvent.layout;
     this.setState({ currentScreenWidth: layout.width, currentScreenHeight: layout.height });
+  }
+
+  handleSearchInput(event) {
+    this.setState({
+      searchInput: event.nativeEvent.text
+    });
+  }
+
+  searchForUser() {
+    /*this.searchInput*/
+
   }
 
   calculatedSize() {
@@ -146,6 +159,7 @@ class PhotosView extends React.Component{
       )
     })
   }
+
 
   _backButton() {
     this.props.navigator.pop();
@@ -234,11 +248,19 @@ class PhotosView extends React.Component{
           {this.state.imageUrls && this.state.selectedIndex===0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>{`Looks like you haven't taken any photos...`}</Text>   : null}
           {this.state.imageUrls && this.state.selectedIndex===0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the camera and drop a photo!</Text>  : null}
           
-          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no favorite photos...</Text>   : null}
-          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
+          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Add friends so they can see your dropped photos!</Text>   : null}
           
-          
-
+          <TextInput
+            placeholder={'Search by username or phone number'}
+            autoCapitalize={'none'}
+            autoCorrect={false}
+            maxLength={16}
+            style={styles.userInput}
+            returnKeyType={'go'}
+            value={this.state.searchInput}
+            onChange={this.handleSearchInput.bind(this)}
+            onSubmitEditing={this.searchForUser.bind(this)}
+          />
           <ScrollView 
             onLayout={this.handleRotation.bind(this)} 
             contentContainerStyle={styles.scrollView}
@@ -288,6 +310,26 @@ var styles = StyleSheet.create({
   centering: {
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  fieldTitle: {
+    marginTop: 10,
+    marginBottom: 15,
+    fontSize: 18,
+    fontFamily: 'circular',
+    textAlign: 'center',
+    color: '#616161'
+  },
+  userInput: {
+    marginLeft: 30,
+    marginRight: 30,
+    padding: 5,
+    height: 50,
+    fontSize: 18,
+    fontFamily: 'circular',
+    borderWidth: 1,
+    borderColor: '#616161',
+    borderRadius: 4,
+    color: '#616161'
   },
   noPhotosText: {
     marginTop: 65,
