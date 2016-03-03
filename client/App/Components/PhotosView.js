@@ -130,7 +130,7 @@ class PhotosView extends React.Component{
     return images.map((uri, index) => {
       return (
         // Hardcoded key value for each element below to dismiss eror message
-        <TouchableHighlight onPress={this.showImageFullscreen(uri, index)}>
+        <TouchableHighlight key={index} onPress={this.showImageFullscreen(uri, index)}>
           <Image style={[styles.image, this.calculatedSize()]} source={{uri: uri}} />
         </TouchableHighlight>
       )
