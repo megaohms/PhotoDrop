@@ -28,7 +28,8 @@ class Map extends React.Component {
     this.state = {
       //pass down current user's ID??
       currentUser: this.props.userId,
-      currentUserStream: [],
+      currentUserStream: undefined,
+      currentUserFriendStream: undefined,
       latitude: this.props.params.latitude,
       longitude: this.props.params.longitude,
       latitudeDelta: 0.003,
@@ -129,12 +130,13 @@ class Map extends React.Component {
           style={styles.map}
           region={this.state}
           showsUserLocation={true}
+          followUserLocation={true}
           scrollEnabled={false}
-          // zoomEnabled={false}
+          zoomEnabled={true}
           rotateEnabled={false}
           maxDelta={0.003}
         >
-
+        {!!this.state.currentUserStream}
         <MapView.Marker coordinate={this.state}>
           <CircleMarker navigator={this.props.navigator}/>
         </MapView.Marker>
