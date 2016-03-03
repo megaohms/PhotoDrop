@@ -27,7 +27,7 @@ class Map extends React.Component {
 
     this.state = {
       //pass down current user's ID??
-      currentUser: null,
+      currentUser: this.props.userId,
       currentUserStream: [],
       latitude: this.props.params.latitude,
       longitude: this.props.params.longitude,
