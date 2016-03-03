@@ -48,12 +48,12 @@ class PhotoSwiperView extends React.Component{
     } else if(this.state.showsIndex===true) {
       this.setState({showsIndex:false});
     }
-  };
+  }
 
   render() {
     var photosUrls = this.state.photos;
     var showStatusBar = this.props.route.showStatusBar;
-    var navigator=this.props.navigator;
+    var navigator = this.props.navigator;
     var togglePagination = this.togglePagination.bind(this);
     var showsIndex = this.state.showsIndex;
     var userId = this.props.route.userId;

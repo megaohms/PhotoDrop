@@ -22,9 +22,11 @@ dist/
 # Dependency directorys
 # Deployed apps should consider commenting these lines out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+
+# node.js
+npm-debug.log
 node_modules/
+
 bower_components/
 
-client/ios/ProfoundMongoose/AppDelegate.m
-
-client/App/Utils/config.js
+.vscode/

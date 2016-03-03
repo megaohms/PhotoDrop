@@ -27,10 +27,21 @@ project.xcworkspace
 .idea
 .gradle
 local.properties
-
-# node.js
-#
-node_modules/
-npm-debug.log
 android/
 index.android.js
+
+# node.js
+node_modules/
+npm-debug.log
+
+#VS Code configs
+.flowconfig
+tsconfig.json
+
+#ios
+ios/PhotoDrop.xcodeproj/project.pbxproj
+ios/ProfoundMongoose/AppDelegate.m
+#ios/PhotoDrop.xcodeproj/xcshareddata/xcschemes/ProfoundMongoose.xcscheme
+
+#Config files
+App/Utils/config.js

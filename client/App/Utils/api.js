@@ -50,11 +50,11 @@ var api = {
     });
   },
 
-  uploadPhoto(data, latitude, longitude, userId, callback) {
+  uploadPhoto(imageData, latitude, longitude, userId, visibility, callback) {
+    //See server/photos/photoModel.js for visibility definitions
     var url = 'http://' + config.url + ':8000/imgUpload';
     // cut data in half
-    var firstHalf = data.slice(0, Math.floor(data.length / 2));
-    var secondHalf = data.slice(Math.floor(data.length / 2));
+    
     fetch(url, {
       method: 'POST',
       headers: {
@@ -62,28 +62,15 @@ var api = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        data: firstHalf,
+        imageData: imageData,
         latitude: latitude,
         longitude: longitude,
-        userId: userId
+        userId: userId,
+        visibility: visibility || 0 //default to private incase someone forgets to pass it
       })
-    }).then(function() {
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: secondHalf,
-          latitude: latitude,
-          longitude: longitude,
-          userId: userId
-        })
-      }).then(function(res) {
-        callback(res._bodyText);
-      }).catch(function(err) { console.log(err); });
-    }).catch(function(err) { console.log(err); });
+    })
+    .then((res) => callback(res._bodyText))
+    .catch(console.log);
   },
 
   fetchPhotos(latitude, longitude, radius, callback) {
