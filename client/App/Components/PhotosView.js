@@ -131,16 +131,16 @@ class PhotosView extends React.Component{
       return (
         // Hardcoded key value for each element below to dismiss eror message
         <TouchableHighlight key={index} onPress={this.showImageFullscreen(uri, index)}>
-          <Image style={[styles.image, this.calculatedSize()]} source={{uri: uri}} />
+          <Image key={index} style={[styles.image, this.calculatedSize()]} source={{uri: uri}} />
         </TouchableHighlight>
       )
     })
   }
 
   renderImagesInGroupsOf(count) {
-    return _.chunk(IMAGE_URLS, IMAGES_PER_ROW).map((imagesForRow) => {
+    return _.chunk(IMAGE_URLS, IMAGES_PER_ROW).map((imagesForRow, index) => {
       return (
-        <View style={styles.row}>
+        <View style={styles.row} key={index}>
           {this.renderRow(imagesForRow)}
         </View>
       )
