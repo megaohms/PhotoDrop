@@ -109,7 +109,7 @@ class PhotoView extends React.Component{
               </View>
               <View style={styles.rightContainer}>
                 <TouchableOpacity onPress={this._streamImage.bind(this)} style={styles.streamButton}>
-                  {this.state.streamed ? <IconIon name="ios-plus" size={65} color="white" style={styles.streamIcon} /> : <IconIon name="ios-plus-outline" size={65} color="white" style={styles.streamIcon} />}
+                  {this.state.streamed ? <IconIon name="ios-minus-outline" size={65} color="white" style={styles.streamIcon} /> : <IconIon name="ios-plus-outline" size={65} color="white" style={styles.streamIcon} />}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this._favoriteImage.bind(this)} style={styles.favoriteButton}>
                   {this.state.favorited ? <Icon name="heart" size={20} color="white" style={styles.favoriteIcon} /> : <Icon name="heart-o" size={20} color="white" style={styles.favoriteIcon} />}
@@ -145,7 +145,7 @@ class PhotoView extends React.Component{
               </View>
               <View style={styles.rightContainer}>
                 <TouchableOpacity onPress={this._streamImage.bind(this)} style={styles.streamButton}>
-                  {this.state.streamed ? <IconIon name="ios-plus" size={65} color="white" style={styles.streamIcon} /> : <IconIon name="ios-plus-outline" size={65} color="white" style={styles.streamIcon} />}
+                  {this.state.streamed ? <IconIon name="ios-minus-outline" size={65} color="white" style={styles.streamIcon} /> : <IconIon name="ios-plus-outline" size={65} color="white" style={styles.streamIcon} />}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this._favoriteImage.bind(this)} style={styles.favoriteButton}>
                   {this.state.favorited ? <Icon name="heart" size={20} color="white" style={styles.favoriteIcon} /> : <Icon name="heart-o" size={20} color="white" style={styles.favoriteIcon} />}
