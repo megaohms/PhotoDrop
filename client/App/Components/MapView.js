@@ -130,22 +130,21 @@ class Map extends React.Component {
           <CircleMarker navigator={this.props.navigator}/>
         </MapView.Marker>
 
-          { this.state.photosLocations.map((photoLocation) => {
-              return (
-              <MapView.Marker coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
+          { this.state.photosLocations.map((photoLocation, index) => {
+            return (
+              <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
                 <BlackPhotoMarker navigator={this.props.navigator}/>
               </MapView.Marker>
-             )}
-            )
-          }
-          { this.state.closeLocations.map((photoLocation) => {
-              return (
-               <MapView.Marker coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}} onPress={this.showImage(photoLocation.url)}>
-                 <RedPhotoMarker navigator={this.props.navigator}/>
-               </MapView.Marker>
-             )}
-            )
-          }
+            );
+          })}
+          
+          { this.state.closeLocations.map((photoLocation, index) => {
+            return (
+              <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}} onPress={this.showImage(photoLocation.url)}>
+                <RedPhotoMarker navigator={this.props.navigator}/>
+              </MapView.Marker>
+             );
+          })}
         </MapView>
 
         <TouchableHighlight onPress={this.onLocationPressed.bind(this)} style={styles.arrowButton} underlayColor={'#FF5A5F'}>
