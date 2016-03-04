@@ -170,7 +170,7 @@ module.exports = {
   getPhotoData: function(req, res, next) {
     var currentUserId = req.query.userId;
     Photo.findOne({ url: req.query.url }, function(err, photo) {
-      if (err) console.log(err)
+      if (err) next(err);
       if (photo) {
         User.findOne({ _id: mongoose.mongo.ObjectID(photo.userId) }, function(err, user) {
           if (err) next(err);
@@ -190,7 +190,7 @@ module.exports = {
           }
         });
       }
-    })
+    });
   },
 
   fetchFavorites: function(req, res, next) {
@@ -204,7 +204,7 @@ module.exports = {
     });
   },
 
-  fetchUsers: function(req, res, next) {
+  fetchUsersBySearchInput: function(req, res, next) {
     var username = req.query.search;
     findUsers({ username: username }, function (err, foundUsers) {
       if (err) {
@@ -220,14 +220,69 @@ module.exports = {
 
   addFriend: function(req, res, next) {
     var friendRequest = JSON.parse(Object.keys(req.body)[0]);
-    console.log(friendRequest);
-
-    res.send();
+    findUser({ _id: friendRequest.userId })
+      .then(function(user) {
+        if (!user) {
+          next(new Error('User does not exist'));
+        } else {
+          user.friends.push(friendRequest.friendId);
+          user.save(function(err, savedUser) {
+            if (err) { 
+              next(new Error(err));
+            } else {
+              findUser({ _id: friendRequest.friendId })
+                .then(function(user) {
+                  if (!user) {
+                    next(new Error('User does not exist'));
+                  } else {
+                    user.friends.push(friendRequest.userId);
+                    user.save(function(err, savedUser) {
+                      if (err) { 
+                        next(new Error(err));  
+                      } else {
+                        res.send('Friend added!');
+                      }
+                    });
+                  }    
+                });
+            }
+          });
+        }
+      })
+      .fail(function(error) {
+        next(error);
+      });
   },
 
   fetchFriends: function(req, res, next) {
-    
+    res.send();
+  /* Work in progress  
+
+    var currentUserId = req.query.userId;
+    var friends = [];
+    findUser({ _id: currentUserId })
+      .then( (foundUser) => {
+        if (!foundUser) {
+          next(new (Error));
+        } else {
+          for (var i = 0; i < foundUsers.friends.length; i++) {
+            friendId = foundUsers.friends[i];
+            findUser({ _id: friendId })
+              .then((friend) => {
+                friends.push(friend);
+              })
+              .fail( (err) => {
+                next(err);
+              });
+          }
+          res.json(friends);
+        } 
+      })
+      .fail(function(error) {
+        next(error);
+      });
+
+      */
 
   }
-
 };

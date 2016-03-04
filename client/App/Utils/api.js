@@ -226,12 +226,11 @@ var api = {
     });
   },
 
-  addFriend(userID, friendID, callback) { 
+  addFriend(userId, friendId, callback) { 
     var friendRequest = {
-      userId: userID,
-      friendId: friendID
+      userId: userId,
+      friendId: friendId
     }
-    
     var url = 'http://' + config.url + ':8000/addFriend';
     return fetch(url, {
       method: 'POST',
@@ -244,6 +243,23 @@ var api = {
       console.error(err);
       callback(err, null)
     });
+  },
+
+  fetchUserFriends(userId, callback) {
+    var url = 'http://' + config.url + ':8000/fetchUserFriends?userId=' + userId;
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function(friends) {
+      callback(friends._bodyInit);
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+
   }
 
 

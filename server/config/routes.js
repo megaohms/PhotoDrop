@@ -33,9 +33,9 @@ module.exports = function(app, express) {
   app.post('/changePassword', userController.changePassword);
   app.post('/changeUsername', userController.changeUsername);
 
-  // Fetch users for friends search
-  app.get('/fetchUsers/', userController.fetchUsers);
-  // app.post('/fetchFriends/', userController.fetchFriends);
+  // Fetch friends, add friend, and search for friends
+  app.get('/fetchUsers/', userController.fetchUsersBySearchInput);
+  app.get('/fetchUserFriends', userController.fetchFriends);
   app.post('/addFriend/', userController.addFriend);
 
   // Handle errors for unsupported requests
