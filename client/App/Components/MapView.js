@@ -143,9 +143,7 @@ class Map extends React.Component {
           { this.state.photosLocations.map((photoLocation, index) => {
               return (
               <MapView.Marker key={index}coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
-                <BlackPhotoMarker navigator={this.props.navigator} id={photoLocation.url} currentStream={this.state.currentUserStream}/>
-                {// <BlackPhotoMarker navigator={this.props.navigator} id={photoLocation.url} currentStream={this.state.currentUserStream}/>
-                }
+                <BlackPhotoMarker navigator={this.props.navigator} />
               </MapView.Marker>
              )}
             )
@@ -153,9 +151,7 @@ class Map extends React.Component {
           { this.state.closeLocations.map((photoLocation, index) => {
               return (
                 <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}} onPress={this.showImage(photoLocation.url)}>
-                  {//<RedPhotoMarker navigator={this.props.navigator} />
-                  }
-                  <RedPhotoMarker navigator={this.props.navigator} id={photoLocation.url} currentStream={this.state.currentUserStream}/>
+                  <RedPhotoMarker navigator={this.props.navigator} />
                 </MapView.Marker>
               )}
             )
