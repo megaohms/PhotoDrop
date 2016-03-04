@@ -73,24 +73,25 @@ class PhotosView extends React.Component{
         this.setState({ imageUrls: photosUrls });
         this.setState({ userPhotosUrls: photosUrls });
       })
-      if ( true ) {
-      // NEW: grab streams photos
-      // TODO: needs a function in api called api.fetchUserStreams
-      // set the userStreamsUrls as the collection of photos
-      api.fetchUserStreams(this.state.userId, (photos) => {
-        var photosArr = JSON.parse(photos);
-        console.log(photosArr);
-        this.setState({ userStreamsUrls: photosArr });
-        console.log(this.state.userStreamsUrls);
-      })
-      api.fetchUserPhotos(this.state.userId, (photos) => {
-        var photosArr = JSON.parse(photos);
-        var photosUrls = photosArr.map((photo) => {
-          return photo.url;
-        });
-        this.setState({ imageUrls: photosUrls });
-        this.setState({ userPhotosUrls: photosUrls });
-      })
+        if ( true ) {
+        // NEW: grab streams photos
+        // TODO: needs a function in api called api.fetchUserStreams
+        // set the userStreamsUrls as the collection of photos
+        api.fetchUserStreams(this.state.userId, (photos) => {
+          var photosArr = JSON.parse(photos);
+          console.log(photosArr);
+          this.setState({ userStreamsUrls: photosArr });
+          console.log(this.state.userStreamsUrls);
+        })
+        api.fetchUserPhotos(this.state.userId, (photos) => {
+          var photosArr = JSON.parse(photos);
+          var photosUrls = photosArr.map((photo) => {
+            return photo.url;
+          });
+          this.setState({ imageUrls: photosUrls });
+          this.setState({ userPhotosUrls: photosUrls });
+        })
+      }
     } else {
       navigator.geolocation.getCurrentPosition(
         location => {

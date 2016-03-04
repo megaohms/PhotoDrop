@@ -213,8 +213,7 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
-    marginRight: 15,
-    marginTop: 15
+    margin: 10
   },
   favoriteButton:{
     width:50,

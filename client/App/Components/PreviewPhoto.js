@@ -77,13 +77,13 @@ class PreviewPhoto extends React.Component {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={_.once(this._cancelImage.bind(this))} style={styles.noButton}>
-              <IconIon name="ios-close-empty" size={60} color="#FC9396" style={styles.noIcon} />
+              <IconIon name="ios-close-empty" size={53} color="#FFF" style={styles.noIcon} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={_.once(this._sendImageForAll.bind(this))} >
-              <IconIon name="earth" size={60} color="#036C69" style={styles.earthButton} />
+            <TouchableOpacity onPress={_.once(this._sendImageForAll.bind(this))} style={styles.earthButton}>
+              <IconIon name="earth" size={53} color="#FFF" style={styles.earthIcon}/>
             </TouchableOpacity>
             <TouchableOpacity onPress={_.once(this._sendImageForFriends.bind(this))} style={styles.friendsButton}>
-              <IconIon name="ios-people" size={60} color="#036C69" style={styles.yesIcon} />
+              <IconIon name="ios-people" size={53} color="#FFF" style={styles.friendsIcon} />
             </TouchableOpacity>
           </View>
 
@@ -112,13 +112,11 @@ var styles = StyleSheet.create({
     width: 50,
     height: 50,
     backgroundColor:'transparent',
-    borderRadius: 26,
+    borderRadius: 35,
     alignItems:'center',
     justifyContent: 'center',
-    borderWidth: 2,
     borderColor: 'white',
-    marginTop: 15,
-    marginBottom: 15
+    margin: 10
   },
   friendsButton: {
     width: 50,
@@ -129,29 +127,40 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
-    margin: 15,
+    margin: 10,
   },
-  yesIcon: {
+  earthIcon: {
     width: 60,
     height: 60,
-    marginLeft: 0
+    paddingLeft: 7,
+    paddingTop: 3.5
+  },
+  yesIcon: {
+    width: 45,
+    height: 45,
+    paddingTop: -20
+  },
+  friendsIcon: {
+    width: 45,
+    height: 45,
+    paddingTop: -4
   },
   noButton: {
     width: 50,
     height: 50,
     backgroundColor:'transparent',
-    borderRadius: 26,
+    borderRadius: 35,
     alignItems:'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
-    marginTop: 15,
-    marginBottom: 15
+    margin: 10
   },
   noIcon: {
     width: 60,
     height: 60,
-    marginLeft: 37
+    paddingLeft: 20,
+    paddingTop: 2.5
   },
   container: {
     flex: 1,
