@@ -34,14 +34,14 @@ class Map extends React.Component {
       longitude: this.props.params.longitude,
       latitudeDelta: 0.003,
       longitudeDelta: (this.props.params.width / this.props.params.height) * 0.003, // division is aspect ratio
-      radius: 50
+      radius: 50,
       photos: null //[]
     };
 
     api.fetchUserStreams(this.state.currentUser, function(streamedPhotos) {
       //this does something with the 
       var photoStream = JSON.parse(streamedPhotos);
-      this.setState({ currentUserStream: photoStream })
+      this.setState({ currentUserStream: photoStream });
     });
 
   }
