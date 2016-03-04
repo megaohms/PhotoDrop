@@ -18,15 +18,15 @@ class RedPhotoMarker extends React.Component {
 
   render() {
     return (
-        <View style={styles.container}>
-          <View style={styles.bubble}>
-            <TouchableOpacity style={styles.icon}>
-              <IconIon name="camera" size={25} color="#ededed"/>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.arrowBorder} />
-          <View style={styles.arrow} />
+      <View style={styles.container}>
+        <View style={styles.bubble}>
+          <TouchableOpacity style={styles.icon}>
+            <IconIon name="camera" size={25} color="#ededed"/> 
+          </TouchableOpacity>
         </View>
+        <View style={styles.arrowBorder} />
+        <View style={styles.arrow} />
+      </View>
     );
   }
 }

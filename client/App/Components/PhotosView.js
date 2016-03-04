@@ -60,30 +60,33 @@ class PhotosView extends React.Component{
       allViewablePhotos: undefined,
       isRefreshing: false,
     };
-    if(this.state.favorites) {
-      api.fetchUserFavorites(this.state.userId, (photos) => {
-        var photosArr = JSON.parse(photos);
-        this.setState({ userFavoritesUrls: photosArr });
-      })
-      api.fetchUserPhotos(this.state.userId, (photos) => {
-        var photosArr = JSON.parse(photos);
-        var photosUrls = photosArr.map((photo) => {
-          return photo.url;
-        });
-        this.setState({ imageUrls: photosUrls });
-        this.setState({ userPhotosUrls: photosUrls });
-      })
-    } else if ( this.state.streams ) {
-      // NEW: grab streams photos
-        // TODO: needs a function in api called api.fetchUserStreams
-        // set the userStreamsUrls as the collection of photos
-        api.fetchUserStreams(this.state.userId, (photos) => {
+      if(this.state.favorites) {
+        api.fetchUserFavorites(this.state.userId, (photos) => {
           var photosArr = JSON.parse(photos);
-          this.setState({ userStreamsUrls: photosArr });
+          this.setState({ userFavoritesUrls: photosArr });
         })
         api.fetchUserPhotos(this.state.userId, (photos) => {
           var photosArr = JSON.parse(photos);
           var photosUrls = photosArr.map((photo) => {
+            return photo.url;
+          });
+          this.setState({ imageUrls: photosUrls });
+          this.setState({ userPhotosUrls: photosUrls });
+        })
+      } 
+      if ( true ) {
+      // NEW: grab streams photos
+      // TODO: needs a function in api called api.fetchUserStreams
+      // set the userStreamsUrls as the collection of photos
+      api.fetchUserStreams(this.state.userId, (photos) => {
+        var photosArr = JSON.parse(photos);
+        console.log(photosArr); 
+        this.setState({ userStreamsUrls: photosArr });
+        console.log(this.state.userStreamsUrls);
+      })
+      api.fetchUserPhotos(this.state.userId, (photos) => {
+        var photosArr = JSON.parse(photos);
+        var photosUrls = photosArr.map((photo) => {
           return photo.url;
         });
         this.setState({ imageUrls: photosUrls });
@@ -112,8 +115,10 @@ class PhotosView extends React.Component{
   }
 
   componentDidMount() {
-    if(this.state.favorites){
+    if(this.state.favorites || this.state.streams){
       this.setState({ imageUrls: this.state.userPhotosUrls});
+    // } else if(this.state.streams){
+    //   this.setState({ imageUrls: this.state.userPhotosUrls});
     } else {
       this.setState({ imageUrls: this.state.allViewablePhotos});
     }

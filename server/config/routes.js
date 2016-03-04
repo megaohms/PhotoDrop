@@ -14,13 +14,13 @@ module.exports = function(app, express) {
   app.get('/fetchLocations/', photoController.fetchLocations);
   app.get('/fetchUserPhotos/', photoController.fetchUserPhotos);
   //fetch userStreams function endpoint
-  //app.get('/fetchUserStreams/', photoController.fetchUserStreams);
+  app.get('/fetchUserStreams/', userController.fetchStreams);
   app.get('/fetchUserFavorites/', userController.fetchFavorites);
 
   // Increment views count on photo and add to Favorites
   app.get('/incrementViews/', photoController.incrementViews);
   app.get('/toggleFavorite/', userController.toggleFavorite);
-  //toggleStory from userInterface
+  //toggleStream from userInterface
   app.get('/toggleStream/', userController.toggleStream);
   app.get('/getPhotoData/', userController.getPhotoData);
 
@@ -32,6 +32,11 @@ module.exports = function(app, express) {
   // Change user information
   app.post('/changePassword', userController.changePassword);
   app.post('/changeUsername', userController.changeUsername);
+
+  // Fetch friends, add friend, and search for friends
+  app.get('/fetchUsers/', userController.fetchUsersBySearchInput);
+  app.get('/fetchUserFriends', userController.fetchFriends);
+  app.post('/addFriend/', userController.addFriend);
 
   // Handle errors for unsupported requests
   app.use(helpers.errorLogger);

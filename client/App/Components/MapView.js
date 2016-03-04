@@ -26,12 +26,23 @@ class Map extends React.Component {
     super(props);
 
     this.state = {
+      //pass down current user's ID??
+      currentUser: this.props.userId,
+      currentUserStream: undefined,
+      currentUserFriendStream: undefined,
       latitude: this.props.params.latitude,
       longitude: this.props.params.longitude,
       latitudeDelta: 0.003,
       longitudeDelta: (this.props.params.width / this.props.params.height) * 0.003, // division is aspect ratio
       photos: null //[]
     };
+
+    api.fetchUserStreams(this.state.currentUser, function(streamedPhotos) {
+      //this does something with the 
+      var photoStream = JSON.parse(streamedPhotos);
+      this.setState({ currentUserStream: photoStream })
+    });
+
   }
 
   componentDidMount() {
@@ -100,6 +111,7 @@ class Map extends React.Component {
   render() {
 
     if(this.state.photos) {
+
       return (
         <View style={styles.container}>
           <MapView
