@@ -38,7 +38,8 @@ class Map extends React.Component {
       closeLocations: undefined
     };
     
-    api.fetchPhotos(this.props.params.latitude, this.props.params.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+    // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+    api.fetchPhotos(this.props.params.latitude, this.props.params.longitude, 50, (photos) => { 
       var photosArr = JSON.parse(photos);
       this.setState({ closeLocations: photosArr });
     });
@@ -55,20 +56,20 @@ class Map extends React.Component {
     });
   }
 
-  componentDidMount(){
-      setInterval(()=> {
-        if(this.props.params.index===2) {
-          this.onLocationPressed();
-          api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta, (photos) => {
-            var photosArr = JSON.parse(photos);
-            this.setState({ photosLocations: photosArr });
-          });
-          api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
-            var photosArr = JSON.parse(photos);
-            this.setState({ closeLocations: photosArr });
-          });
-        }
-      }, 2000)
+  componentDidMount() {
+    setInterval(()=> {
+      if(this.props.params.index === 2) {
+        this.onLocationPressed();
+        api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta, (photos) => {
+          var photosArr = JSON.parse(photos);
+          this.setState({ photosLocations: photosArr });
+        });
+        api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+          var photosArr = JSON.parse(photos);
+          this.setState({ closeLocations: photosArr });
+        });
+      }
+    }, 2000);
   }
 
   showImage(uri) {
@@ -110,78 +111,76 @@ class Map extends React.Component {
   }
 
   openAllPhotos() {
-      this.props.navigator.push({
-        component: PhotosView,
-        userId: this.props.userId,
-        sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
-        previousComponent: 'map',
-        latitude: this.state.latitude,
-        longitude: this.state.longitude
-      });
+    this.props.navigator.push({
+      component: PhotosView,
+      userId: this.props.userId,
+      sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
+      previousComponent: 'map',
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    });
   }
 
   render() {
+    if(this.state.photosLocations && this.state.closeLocations) {
+      return (
+        <View style={styles.container}>
+          <MapView
+            ref="map"
+            style={styles.map}
+            region={this.state}
+            showsUserLocation={true}
+            scrollEnabled={false}
+            // zoomEnabled={false}
+            rotateEnabled={false}
+            maxDelta={0.003}
+          >
+          
+            <MapView.Marker coordinate={this.state}>
+              <CircleMarker navigator={this.props.navigator}/>
+            </MapView.Marker>
 
-    if(this.state.photosLocations && this.state.closeLocations){
-    return (
-      <View style={styles.container}>
-        <MapView
-          ref="map"
-          style={styles.map}
-          region={this.state}
-          showsUserLocation={true}
-          followUserLocation={true}
-          scrollEnabled={false}
-          zoomEnabled={true}
-          rotateEnabled={false}
-          maxDelta={0.003}
-        >
-        <MapView.Marker coordinate={this.state}>
-          <CircleMarker navigator={this.props.navigator}/>
-        </MapView.Marker>
-
-          { this.state.photosLocations.map((photoLocation, index) => {
+            { this.state.photosLocations.map((photoLocation, index) => {
               return (
-              <MapView.Marker key={index}coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
-                <BlackPhotoMarker navigator={this.props.navigator} />
-              </MapView.Marker>
-             )}
-            )
-          }
-          { this.state.closeLocations.map((photoLocation, index) => {
+                <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
+                  <BlackPhotoMarker navigator={this.props.navigator}/>
+                </MapView.Marker>
+              );
+            })}
+            
+            { this.state.closeLocations.map((photoLocation, index) => {
               return (
                 <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}} onPress={this.showImage(photoLocation.url)}>
-                  <RedPhotoMarker navigator={this.props.navigator} />
+                  <RedPhotoMarker navigator={this.props.navigator}/>
                 </MapView.Marker>
-              )}
-            )
-          }
-        </MapView>
+              );
+            })}
+          </MapView>
 
-        <TouchableHighlight onPress={this.onLocationPressed.bind(this)} style={styles.arrowButton} underlayColor={'#FF5A5F'}>
-          <Icon name="location-arrow" size={25} color="#ededed" style={styles.arrowIcon} />
-        </TouchableHighlight>
+          <TouchableHighlight onPress={this.onLocationPressed.bind(this)} style={styles.arrowButton} underlayColor={'#FF5A5F'}>
+            <Icon name="location-arrow" size={25} color="#ededed" style={styles.arrowIcon} />
+          </TouchableHighlight>
 
 
-        <TouchableOpacity style={styles.buttonContainer} onPress={this.openAllPhotos.bind(this)}>
-          <View style={[styles.bubble, styles.latlng]}>
-            <Text style={styles.openPhotosText}>
-              {`View All Available Photos`}
-            </Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={this.openAllPhotos.bind(this)}>
+            <View style={[styles.bubble, styles.latlng]}>
+              <Text style={styles.openPhotosText}>
+                {`View All Available Photos`}
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.centering}>
-        <ActivityIndicatorIOS size={'large'}/>
-        <Text style={styles.noMapText}>Getting your location...</Text>
-      </View>
-    );
-  } 
-};
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.centering}>
+          <ActivityIndicatorIOS size={'large'}/>
+          <Text style={styles.noMapText}>Getting your location...</Text>
+        </View>
+      );
+    } 
+  }
 }
 
 var styles = StyleSheet.create({
