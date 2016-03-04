@@ -34,6 +34,7 @@ class Map extends React.Component {
       longitude: this.props.params.longitude,
       latitudeDelta: 0.003,
       longitudeDelta: (this.props.params.width / this.props.params.height) * 0.003, // division is aspect ratio
+      radius: 50
       photos: null //[]
     };
 
@@ -50,7 +51,7 @@ class Map extends React.Component {
       if(this.props.params.index === 2) {
         this.onLocationPressed();
         
-        api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta)
+        api.getPotentialPhotosInArea(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta, this.state.radius, this.props.userId)
         .then((photos) => {
           var photosArr = JSON.parse(photos);
           this.setState({ photos: photosArr });

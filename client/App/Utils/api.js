@@ -73,6 +73,9 @@ var api = {
     .catch(console.log);
   },
 
+  /**
+   * Gets photos that a user is allowed to see AND close enough to view
+   */
   getViewablePhotosInRange(latitude, longitude, radius, userId) {
     var url = `http://${config.url}:8000/fetchPhotos?lat=${latitude}&lon=${longitude}&radius=${radius}&userId=${userId}`;
     return fetch(url, {
@@ -85,9 +88,13 @@ var api = {
     });
   },
   
-  fetchLocations(latitude, longitude, latdelta, londelta, radius) {
+  /**
+   * Gets photos that a user is allowed to see in a rectangular area.  Photo has property photoIsVisible
+   * which indicates if they are close enough to actual view the photo (based on radius provided)
+   */
+  getPotentialPhotosInArea(latitude, longitude, latdelta, londelta, radius, userId) {
     radius = radius || 50;
-    var url = `http://${config.url}:8000/fetchLocations?lat=${latitude}&lon=${longitude}&latdelta=${latdelta}&londelta=${londelta}&radius=${radius}`;
+    var url = `http://${config.url}:8000/fetchLocations?lat=${latitude}&lon=${longitude}&latdelta=${latdelta}&londelta=${londelta}&radius=${radius}&userId=${userId}`;
     return fetch(url, {
       method: 'GET',
       headers: {
