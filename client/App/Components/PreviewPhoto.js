@@ -24,13 +24,13 @@ class PreviewPhoto extends React.Component {
       transparent: true,
       innerContainerTransparentStyle: null,
       active: false,
-      colorStyle: '#000' 
+      colorStyle: '#000'
     };
   }
 
   _sendImage(visibility) {
     api.uploadPhoto(this.props.route.image64, this.props.route.latitude, this.props.route.longitude
-        , this.props.route.userId, visibility, 
+        , this.props.route.userId, visibility,
         (res) => {
           this.setState({modalVisible: true});
           setTimeout(()=> {
@@ -42,15 +42,15 @@ class PreviewPhoto extends React.Component {
   _sendImageForAll() {
     this._sendImage(2);
   }
-  
+
   _sendImageForFriends() {
     this._sendImage(1);
   }
-  _closeModal() { 
+  _closeModal() {
     this.setState({modalVisible: false});
     this.props.navigator.pop();
   }
-  
+
 
   _cancelImage() {
     this.props.navigator.pop();
@@ -109,10 +109,16 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
   },
   earthButton: {
-    height: 60,
-    width: 60,
-    borderRadius: 30,
-    backgroundColor: 'blue'
+    width: 50,
+    height: 50,
+    backgroundColor:'transparent',
+    borderRadius: 26,
+    alignItems:'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+    marginTop: 15,
+    marginBottom: 15
   },
   friendsButton: {
     width: 50,
@@ -133,13 +139,14 @@ var styles = StyleSheet.create({
   noButton: {
     width: 50,
     height: 50,
-    backgroundColor: 'white',
-    borderRadius: 25,
-    alignItems: 'center',
+    backgroundColor:'transparent',
+    borderRadius: 26,
+    alignItems:'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
-    margin: 15,
+    marginTop: 15,
+    marginBottom: 15
   },
   noIcon: {
     width: 60,
