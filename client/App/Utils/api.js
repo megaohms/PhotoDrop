@@ -72,7 +72,7 @@ var api = {
     .then((res) => callback(res._bodyText))
     .catch(console.log);
   },
-
+  //Return all photos and mark photos in view
   fetchPhotos(latitude, longitude, radius, callback) {
     var url = 'http://' + config.url + ':8000/fetchPhotos?lat=' + latitude + '&lon=' + longitude + '&radius=' + radius;
     return fetch(url, {
@@ -87,7 +87,6 @@ var api = {
       console.log(err);
     });
   },
-
   fetchLocations(latitude, longitude, latdelta, londelta, radius) {
     radius = radius || 50;
     var url = `http://${config.url}:8000/fetchLocations?lat=${latitude}&lon=${longitude}&latdelta=${latdelta}&londelta=${londelta}&radius=${radius}`;
@@ -100,7 +99,7 @@ var api = {
     .then(res => res._bodyInit);
   },
 
-
+  
   fetchUserPhotos(userId, callback) {
     var url = 'http://' + config.url + ':8000/fetchUserPhotos?userId=' + userId;
     return fetch(url, {

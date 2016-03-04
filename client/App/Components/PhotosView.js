@@ -98,7 +98,10 @@ class PhotosView extends React.Component{
           });
         }
       );
-      api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+
+      // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+      api.fetchPhotos(this.state.latitude, this.state.longitude, 50, 
+       (photos) => { 
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {
           return photo.url;
@@ -231,6 +234,7 @@ class PhotosView extends React.Component{
           });
         }
       );
+      console.log('1')
       api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {

@@ -38,16 +38,12 @@ module.exports = {
     });
   },
   
-  getPhotosInRange: function(maxRadius, lat, lon, userId) {
+  getPhotosInRange: function(maxRadius, lat, lon, userObj) {
     maxRadius = Number(maxRadius);
     var coords = [lon, lat];
 
-    //TODO - use real user
-    var user = {};
-    user.id = '56d5efa4c13476226210daa1';
-    user.friends = ['56d77a3f953a6d9746d13115'];
     //Find where location is within radius AND the user has access to the photo
-    return Photo.find(filterVisibleUserPicturesInVicinity(coords, maxRadius, user));
+    return Photo.find(filterVisibleUserPicturesInVicinity(coords, maxRadius, userObj));
   },
 
   /**
@@ -67,7 +63,7 @@ module.exports = {
     
     return module.exports.getPhotosInRange(maxRadius, lat, lon, userObj)
       .then(visiblePhotos => {
-        console.log(visiblePhotos);
+
         return Photo.collection.aggregate([
           { $match: filterUserPicturesInRectangularRegion(coords, userObj) },
           { $project:
@@ -138,30 +134,19 @@ module.exports = {
   
   fetchPhotos: function(req, res, next) {
     var maxDistance = Number(req.query.radius);
-    var coords = [req.query.lon, req.query.lat];
 
-    Photo.find({
-      loc: {
-        $near: {
-          $geometry: {
-            type: 'Point',
-            coordinates: coords
-          },
-          $maxDistance: maxDistance
-        }
-      }
-    }, function(err, photos) {
-      if (err) {
-        next(err);
-      }
-      if (photos) { 
-        photos = photos.sort(function(a, b) {
-          return b.views - a.views;
-        });
-      }
-      res.json(photos);
+    //TODO - grab User and friends.  We'll spoof them for now
+    var user = {};
+    user.friends = ['56d77a3f953a6d9746d13115'];
+    user.id = '56d5efa4c13476226210daa1';
+
+    module.exports.getPhotosInRange(maxDistance, req.query.lat, req.query.lon, user)
+    .then(data => {
+      console.log('data', data);
+      res.json(data);
     });
   }
+  
 };
 
 var filterUserPicturesInRectangularRegion = function(coords, user) {
@@ -177,11 +162,7 @@ var filterUserPicturesInRectangularRegion = function(coords, user) {
           }
         }
       }, 
-      {$or: [
-        {visibility: 2},
-        {$and: [{visibility: 0}, {userId: user.id}]}, // <--the current User object ID
-        {$and: [{visibility: 1}, {userId: {$in: user.friends}}]}// <--Array of object IDs of current user's friends
-      ]}
+      filterPhotosUserHasAccessTo(user)
     ]  
   };
 };
@@ -200,17 +181,17 @@ var filterVisibleUserPicturesInVicinity = function(coords, maxRadius, user) {
           }
         }
       }, 
-      {$or: [
-        {visibility: 2},
-        {$and: [{visibility: 0}, {userId: user.id}]},// <--the current User object ID
-        {$and: [{visibility: 1}, {userId: {$in: user.friends}}]}// <--Array of object IDs of current user's friends
-      ]}
+      filterPhotosUserHasAccessTo(user)
     ]
-  }
+  };
 };
-  // db.getCollection('photos').find({$or: [
-  //   {visibility: 2},
-  //   {$and: [{visibility: 0}, {userId: ObjectId("56d5efa4c13476226210daa1")}]}, <--the current User object ID
-  //   {$and: [{visibility: 1}, {userId: {$in: [ObjectId("56d77a3f953a6d9746d13115")]}}]} <--Array of object IDs of current user's friends
-  //   ]})
-  // fetch all photos from DB
+
+var filterPhotosUserHasAccessTo = function(user) {
+  return {
+    $or: [
+          {visibility: 2},
+          {$and: [{visibility: 0}, {userId: user.id}]},
+          {$and: [{visibility: 1}, {userId: {$in: user.friends}}]}
+    ]
+  };
+};

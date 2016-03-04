@@ -32,18 +32,6 @@ class Map extends React.Component {
       longitudeDelta: (this.props.params.width / this.props.params.height) * 0.003, // division is aspect ratio
       photos: null //[]
     };
-    
-    // // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
-    // api.fetchPhotos(this.props.params.latitude, this.props.params.longitude, 50, (photos) => { 
-    //   var photosArr = JSON.parse(photos);
-    //   this.setState({ closeLocations: photosArr });
-    // });
-    
-    // api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta)
-    // .then((photos) => {
-    //   var photosArr = JSON.parse(photos);
-    //   this.setState({ photos: photosArr });
-    // });
   }
 
   componentDidMount() {
@@ -53,14 +41,9 @@ class Map extends React.Component {
         
         api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta)
         .then((photos) => {
-          console.log('photos', photos)
           var photosArr = JSON.parse(photos);
           this.setState({ photos: photosArr });
         });
-        // api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
-        //   var photosArr = JSON.parse(photos);
-        //   this.setState({ closeLocations: photosArr });
-        // });
       }
     }, 2000);
   }
