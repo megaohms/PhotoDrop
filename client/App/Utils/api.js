@@ -88,19 +88,16 @@ var api = {
     });
   },
 
-  fetchLocations(latitude, longitude, latdelta, londelta, callback) {
-    var url = 'http://' + config.url + ':8000/fetchLocations?lat=' + latitude + '&lon=' + longitude + '&latdelta=' + latdelta + '&londelta=' + londelta;
+  fetchLocations(latitude, longitude, latdelta, londelta, radius) {
+    radius = radius || 50;
+    var url = `http://${config.url}:8000/fetchLocations?lat=${latitude}&lon=${longitude}&latdelta=${latdelta}&londelta=${londelta}&radius=${radius}`;
     return fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(function(photos) {
-      callback(photos._bodyInit);
     })
-    .catch(function(err) {
-      console.log(err);
-    });
+    .then(res => res._bodyInit);
   },
 
 
