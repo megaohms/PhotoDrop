@@ -14,19 +14,32 @@ var {
 class RedPhotoMarker extends React.Component {
   constructor(props) {
     super(props);
+    // this.state = {
+    //   isStreamed: false
+    // }
+    // props.currentStream.forEach((streamedPhoto) => {
+    //   if(streamedPhoto.url === this.props.id) {
+    //     setState({isStreamed: true});
+    //   }
+    // })
   }
 
   render() {
     return (
-        <View style={styles.container}>
-          <View style={styles.bubble}>
-            <TouchableOpacity style={styles.icon}>
-              <IconIon name="camera" size={25} color="#ededed"/>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.arrowBorder} />
-          <View style={styles.arrow} />
+      <View style={styles.container}>
+        <View style={styles.bubble}>
+          <TouchableOpacity style={styles.icon}>
+            {
+            //   this.state.isStreamed ? 
+            //   <IconIon name="waterdrop" size={25} color="#9CEDCE"/> 
+            // : 
+            }
+            <IconIon name="camera" size={25} color="#ededed"/> 
+          </TouchableOpacity>
         </View>
+        <View style={styles.arrowBorder} />
+        <View style={styles.arrow} />
+      </View>
     );
   }
 }

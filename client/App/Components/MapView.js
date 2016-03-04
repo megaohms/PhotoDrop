@@ -136,25 +136,28 @@ class Map extends React.Component {
           rotateEnabled={false}
           maxDelta={0.003}
         >
-        {!!this.state.currentUserStream}
         <MapView.Marker coordinate={this.state}>
           <CircleMarker navigator={this.props.navigator}/>
         </MapView.Marker>
 
-          { this.state.photosLocations.map((photoLocation) => {
+          { this.state.photosLocations.map((photoLocation, index) => {
               return (
-              <MapView.Marker coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
-                <BlackPhotoMarker navigator={this.props.navigator}/>
+              <MapView.Marker key={index}coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
+                <BlackPhotoMarker navigator={this.props.navigator} id={photoLocation.url} currentStream={this.state.currentUserStream}/>
+                {// <BlackPhotoMarker navigator={this.props.navigator} id={photoLocation.url} currentStream={this.state.currentUserStream}/>
+                }
               </MapView.Marker>
              )}
             )
           }
-          { this.state.closeLocations.map((photoLocation) => {
+          { this.state.closeLocations.map((photoLocation, index) => {
               return (
-               <MapView.Marker coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}} onPress={this.showImage(photoLocation.url)}>
-                 <RedPhotoMarker navigator={this.props.navigator}/>
-               </MapView.Marker>
-             )}
+                <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}} onPress={this.showImage(photoLocation.url)}>
+                  {//<RedPhotoMarker navigator={this.props.navigator} />
+                  }
+                  <RedPhotoMarker navigator={this.props.navigator} id={photoLocation.url} currentStream={this.state.currentUserStream}/>
+                </MapView.Marker>
+              )}
             )
           }
         </MapView>
