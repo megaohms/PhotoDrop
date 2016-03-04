@@ -204,6 +204,17 @@ module.exports = {
     });
   },
 
+  fetchStreams: function(req, res, next) {
+    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) }, function(err, user) {
+      if (err) next(err);
+      if (!user) {
+        console.error('User was not found');
+      } else {
+        res.json(user.streams);
+      }
+    });
+  },
+  
   fetchUsersBySearchInput: function(req, res, next) {
     var username = req.query.search;
     findUsers({ username: username }, function (err, foundUsers) {

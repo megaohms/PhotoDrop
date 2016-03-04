@@ -14,13 +14,13 @@ module.exports = function(app, express) {
   app.get('/fetchLocations/', photoController.fetchLocations);
   app.get('/fetchUserPhotos/', photoController.fetchUserPhotos);
   //fetch userStreams function endpoint
-  //app.get('/fetchUserStreams/', photoController.fetchUserStreams);
+  app.get('/fetchUserStreams/', userController.fetchStreams);
   app.get('/fetchUserFavorites/', userController.fetchFavorites);
 
   // Increment views count on photo and add to Favorites
   app.get('/incrementViews/', photoController.incrementViews);
   app.get('/toggleFavorite/', userController.toggleFavorite);
-  //toggleStory from userInterface
+  //toggleStream from userInterface
   app.get('/toggleStream/', userController.toggleStream);
   app.get('/getPhotoData/', userController.getPhotoData);
 

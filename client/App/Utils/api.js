@@ -127,8 +127,8 @@ var api = {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(function(photoCollections) {
-      callback(photoCollections._bodyInit);
+    }).then(function(photos) {
+      callback(photos._bodyInit);
     })
     .catch(function(err) {
       console.log(err);

@@ -15,17 +15,18 @@ class BlackPhotoMarker extends React.Component{
     super(props);
   }
 
+
   render() {
     return (
-        <View style={styles.container}>
-          <View style={styles.bubble}>
-            <View style={styles.icon}>
-              <IconIon name="camera" size={25} color="#ededed"/>
-            </View>
+      <View style={styles.container}>
+        <View style={styles.bubble}>
+          <View style={styles.icon}>
+            <IconIon name="camera" size={25} color="#ededed"/>
           </View>
-          <View style={styles.arrowBorder} />
-          <View style={styles.arrow} />
         </View>
+        <View style={styles.arrowBorder} />
+        <View style={styles.arrow} />
+      </View>
     );
   }
 };
