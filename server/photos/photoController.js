@@ -92,17 +92,10 @@ module.exports = {
     var latdelta = Number(req.query.latdelta);
     var londelta = Number(req.query.londelta);
     var radius = Number(req.query.radius) || 50;
-    //TODO - grab User and friends.  We'll spoof them for now
-    var user = {};
-    user.friends = ['56d77a3f953a6d9746d13115'];
-    user.id = '56d5efa4c13476226210daa1';
-    
-    //Hardcoding maxRadius=50
-    module.exports.getAllUserPhotosInArea(lat, lon, latdelta, londelta, radius, user)
-    .then(data => {
-      //TODO - make radius 50 below not hardcoded
-      res.json(data);
-    });
+
+    return User.findOne({_id: req.query.userId}, '_id username friends')
+    .then(user => module.exports.getAllUserPhotosInArea(lat, lon, latdelta, londelta, radius, user))
+    .then(data => res.json(data));  
   },
 
   fetchUserPhotos: function(req, res, next) {
@@ -134,18 +127,11 @@ module.exports = {
   
   fetchPhotos: function(req, res, next) {
     var maxDistance = Number(req.query.radius);
-
-    //TODO - grab User and friends.  We'll spoof them for now
-    var user = {};
-    user.friends = ['56d77a3f953a6d9746d13115'];
-    user.id = '56d5efa4c13476226210daa1';
-
-    module.exports.getPhotosInRange(maxDistance, req.query.lat, req.query.lon, user)
-    .then(data => {
-      res.json(data);
-    });
+    
+    return User.findOne({_id: req.query.userId}, '_id username friends')
+    .then(user => module.exports.getPhotosInRange(maxDistance, req.query.lat, req.query.lon, user))
+    .then(data => res.json(data));
   }
-  
 };
 
 var filterUserPicturesInRectangularRegion = function(coords, user) {
