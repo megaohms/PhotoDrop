@@ -209,7 +209,60 @@ var api = {
     .catch(function(err) {
       console.log(err);
     });
+  },
+
+  fetchUsersBySearchInput(searchInput, callback) {
+    var url = 'http://' + config.url + ':8000/fetchUsers?search=' + searchInput;
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(function(data) {
+      callback(data._bodyInit);
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+  },
+
+  addFriend(userId, friendId, callback) { 
+    var friendRequest = {
+      userId: userId,
+      friendId: friendId
+    }
+    var url = 'http://' + config.url + ':8000/addFriend';
+    return fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(friendRequest)
+    })
+    .then(function(data) {
+      callback(null, data._bodyInit);
+    })
+    .catch(function(err) {
+      console.error(err);
+      callback(err, null)
+    });
+  },
+
+  fetchUserFriends(userId, callback) {
+    var url = 'http://' + config.url + ':8000/fetchUserFriends?userId=' + userId;
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function(friends) {
+      callback(friends._bodyInit);
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+
   }
+
+
 
 };
 
