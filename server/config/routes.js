@@ -33,6 +33,11 @@ module.exports = function(app, express) {
   app.post('/changePassword', userController.changePassword);
   app.post('/changeUsername', userController.changeUsername);
 
+  // Fetch friends, add friend, and search for friends
+  app.get('/fetchUsers/', userController.fetchUsersBySearchInput);
+  app.get('/fetchUserFriends', userController.fetchFriends);
+  app.post('/addFriend/', userController.addFriend);
+
   // Handle errors for unsupported requests
   app.use(helpers.errorLogger);
   app.use(helpers.errorHandler);

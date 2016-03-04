@@ -31,7 +31,7 @@ class Settings extends React.Component {
     });
   }
 
-  openFindFriends() {
+  openFriendsView() {
     this.props.navigator.push({
       component: FriendsView,
       userId: this.props.userId,
@@ -94,7 +94,7 @@ class Settings extends React.Component {
           <TouchableHighlight
             style={styles.touchableHighlightButton}
             underlayColor={'#e66365'}
-            onPress={this.openFindFriends.bind(this)}
+            onPress={this.openFriendsView.bind(this)}
           >
             <Text style={styles.touchableHighlightText}>Friends</Text>
           </TouchableHighlight>
