@@ -142,7 +142,6 @@ module.exports = {
 
     module.exports.getPhotosInRange(maxDistance, req.query.lat, req.query.lon, user)
     .then(data => {
-      console.log('data', data);
       res.json(data);
     });
   }
