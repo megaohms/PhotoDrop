@@ -30,34 +30,37 @@ class Map extends React.Component {
       longitude: this.props.params.longitude,
       latitudeDelta: 0.003,
       longitudeDelta: (this.props.params.width / this.props.params.height) * 0.003, // division is aspect ratio
-      photosLocations: undefined,
-      closeLocations: undefined
+      photos: null //[]
     };
     
-    // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
-    api.fetchPhotos(this.props.params.latitude, this.props.params.longitude, 50, (photos) => { 
-      var photosArr = JSON.parse(photos);
-      this.setState({ closeLocations: photosArr });
-    });
-
-    api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta, (photos) => {
-      var photosArr = JSON.parse(photos);
-      this.setState({ photosLocations: photosArr });
-    });
+    // // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+    // api.fetchPhotos(this.props.params.latitude, this.props.params.longitude, 50, (photos) => { 
+    //   var photosArr = JSON.parse(photos);
+    //   this.setState({ closeLocations: photosArr });
+    // });
+    
+    // api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta)
+    // .then((photos) => {
+    //   var photosArr = JSON.parse(photos);
+    //   this.setState({ photos: photosArr });
+    // });
   }
 
   componentDidMount() {
     setInterval(()=> {
       if(this.props.params.index === 2) {
         this.onLocationPressed();
-        api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta, (photos) => {
+        
+        api.fetchLocations(this.state.latitude, this.state.longitude, this.state.latitudeDelta, this.state.longitudeDelta)
+        .then((photos) => {
+          console.log('photos', photos)
           var photosArr = JSON.parse(photos);
-          this.setState({ photosLocations: photosArr });
+          this.setState({ photos: photosArr });
         });
-        api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
-          var photosArr = JSON.parse(photos);
-          this.setState({ closeLocations: photosArr });
-        });
+        // api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+        //   var photosArr = JSON.parse(photos);
+        //   this.setState({ closeLocations: photosArr });
+        // });
       }
     }, 2000);
   }
@@ -113,7 +116,7 @@ class Map extends React.Component {
 
   render() {
 
-    if(this.state.photosLocations && this.state.closeLocations) {
+    if(this.state.photos) {
       return (
         <View style={styles.container}>
           <MapView
@@ -131,7 +134,7 @@ class Map extends React.Component {
               <CircleMarker navigator={this.props.navigator}/>
             </MapView.Marker>
 
-            { this.state.photosLocations.map((photoLocation, index) => {
+            { this.state.photos.filter(photo => !photo.photoIsVisible).map((photoLocation, index) => {
               return (
                 <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
                   <BlackPhotoMarker navigator={this.props.navigator}/>
@@ -139,7 +142,7 @@ class Map extends React.Component {
               );
             })}
             
-            { this.state.closeLocations.map((photoLocation, index) => {
+            { this.state.photos.filter(photo => photo.photoIsVisible).map((photoLocation, index) => {
               return (
                 <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}} onPress={this.showImage(photoLocation.url)}>
                   <RedPhotoMarker navigator={this.props.navigator}/>

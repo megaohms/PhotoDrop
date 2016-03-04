@@ -53,7 +53,7 @@ module.exports = {
   /**
    * Grabs all files that the given user has access to in the area provided (rectangular area)
    */
-  getAllUserPhotosInArea: function(lat, lon, latdelta, londelta, userId) {
+  getAllUserPhotosInArea: function(lat, lon, latdelta, londelta, maxRadius, userObj) {
     var coords = [
       [
         [lon - londelta, lat + latdelta],
@@ -63,17 +63,13 @@ module.exports = {
         [lon - londelta, lat + latdelta]
       ]
     ];
+    maxRadius = maxRadius || 0;
     
-    //TODO - grab User's friends.  We'll spoof them for now
-    var user = {};
-    user.friends = ['56d77a3f953a6d9746d13115'];
-    user.id = '56d5efa4c13476226210daa1';
-    
-    return module.exports.getPhotosInRange(50, lat, lon, user)
+    return module.exports.getPhotosInRange(maxRadius, lat, lon, userObj)
       .then(visiblePhotos => {
-        console.log('wtf1');
-        Photo.aggregate([
-          { $match: filterUserPicturesInRectangularRegion(coords, user) },
+        console.log(visiblePhotos);
+        return Photo.collection.aggregate([
+          { $match: filterUserPicturesInRectangularRegion(coords, userObj) },
           { $project:
             {
               url: 1,
@@ -83,15 +79,15 @@ module.exports = {
               loc: 1,
               photoIsVisible: 
                 {
-                  $cond: { if: {$setIsSubset: [["$visibility"], [0,2]]}
+                  $cond: { if: {$setIsSubset: [["$_id"], visiblePhotos.map(p => p._id)]}
                     , then: 1, else: 0 }
                 }
             }
          }
-        ]).then function(data) {console.log(data)})
+        ])
       })
-    
-    
+      //aggregate returns a mongo cursor - toArray converts it to the actual result set
+      .then(aggCursor => aggCursor.toArray());
   },
   
   fetchLocations: function(req, res, next) {
@@ -99,13 +95,15 @@ module.exports = {
     var lon = Number(req.query.lon);
     var latdelta = Number(req.query.latdelta);
     var londelta = Number(req.query.londelta);
+    var radius = Number(req.query.radius) || 50;
+    //TODO - grab User and friends.  We'll spoof them for now
+    var user = {};
+    user.friends = ['56d77a3f953a6d9746d13115'];
+    user.id = '56d5efa4c13476226210daa1';
     
-    var allPhotos;
-    
-    module.exports.getAllUserPhotosInArea(lat, lon, latdelta, londelta)
+    //Hardcoding maxRadius=50
+    module.exports.getAllUserPhotosInArea(lat, lon, latdelta, londelta, radius, user)
     .then(data => {
-      console.log(data);
-      allPhotos = data;
       //TODO - make radius 50 below not hardcoded
       res.json(data);
     });
