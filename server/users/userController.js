@@ -268,28 +268,19 @@ module.exports = {
   },
 
   fetchFriends: function(req, res, next) {
-
-    var currentUserId = req.query.userId;
     var friendsArr = [];
     
-/* Work in progress
-    User.findOne({ _id: currentUserId })
-      .populate('friends')
-      .exec(function (err, friends) {
+    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) })
+      .populate('friends', '_id username')
+      .exec(function (err, user) {
         if (err) {
           next(err);
         } else {
-          console.log('friends inside fetchFriends', friends);
-          for (var i = 0; i < friends.length; i++) {
-            var friend = {};
-            friend._id = friends[i]._id;
-            friend.username = friends[i].username;
-            friendsArr.push[friend];
+          for (var i = 0; i < user.friends.length; i++) {
+            friendsArr.push(user.friends[i]);
           }
           res.json(friendsArr);
         }
       });
-      */
-      res.json(friendsArr);
   }
 };
