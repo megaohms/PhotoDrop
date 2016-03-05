@@ -153,26 +153,28 @@ module.exports = {
     Photo.findOne({url: url})
       .then((photo) => {
         console.log('found Photo object; photo: ', photo);
-        User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId)})
+        User.findOne({ _id: photo.userId})
           .then((foundUser) => {
           // if adding to stream
             if(foundUser.streams.indexOf(url) === -1) {
+              console.log('foundUser has streams but not photo');
               foundUser.streams.push(photo.url);
-              foundUser.streamsObject.push(photo._id);
+              foundUser.streamsObjects.push(photo._id);
               foundUser.save((err, savedUser) => {
+                console.log('foundUser has updated streams and streamsObject props');
                 if (err) {
                   next(err);
                 }
-                res.send(savedUser)
+                res.send(savedUser);
               });
             } else {
               foundUser.streams.splice(user.streams.indexOf(photo.url), 1);
-              foundUser.streamsObject.splice(foundUser.streamsObject.indexOf(photo._id), 1);
+              foundUser.streamsObjects.splice(foundUser.streamsObject.indexOf(photo._id), 1);
               foundUser.save((err, savedUser) => {
                 if (err) {
                   next(err);
                 }
-                res.send(savedUser)
+                res.send(savedUser);
               });
             }
           })
