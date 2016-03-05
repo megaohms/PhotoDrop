@@ -146,12 +146,14 @@ class Map extends React.Component {
               );
             })}
 
-            { var polyLineCoordinates = [];
-              this.state.currentUserStream.forEach((photo) => {
-                polyLineCoordinates.push({latitude: photo.loc.coordinates[1], longitude: photo.loc.coordinates[0]});
-                <MapView.Polyline coordinates={polyLineCoordinates} />
-              }
-            )}
+            { 
+            // var polyLineCoordinates = [];
+            //   this.state.currentUserStream.forEach((photo) => {
+            //     polyLineCoordinates.push({latitude: photo.loc.coordinates[1], longitude: photo.loc.coordinates[0]});
+            //   }
+            //   <MapView.Polyline coordinates={polyLineCoordinates} />
+            // )
+            }
           </MapView>
 
           <TouchableHighlight onPress={this.onLocationPressed.bind(this)} style={styles.arrowButton} underlayColor={'#FF5A5F'}>
