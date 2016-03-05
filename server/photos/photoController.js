@@ -27,7 +27,8 @@ module.exports = {
         coordinates: [req.body.longitude, req.body.latitude]
       },
       visibility: req.body.visibility,
-      userId: mongoose.mongo.ObjectID(req.body.userId)
+      userId: mongoose.mongo.ObjectID(req.body.userId),
+      userIdString: req.body.userId
     })
     .save()
     .then(function(data) {
@@ -63,7 +64,7 @@ module.exports = {
     
     return module.exports.getPhotosInRange(maxRadius, lat, lon, userObj)
       .then(visiblePhotos => {
-
+        console.log( visiblePhotos.map(p => p._id));
         return Photo.collection.aggregate([
           { $match: filterUserPicturesInRectangularRegion(coords, userObj) },
           { $project:
@@ -95,7 +96,10 @@ module.exports = {
 
     return User.findOne({_id: req.query.userId}, '_id username friends')
     .then(user => module.exports.getAllUserPhotosInArea(lat, lon, latdelta, londelta, radius, user))
-    .then(data => res.json(data));  
+    .then(data => {
+      console.log(data.length);
+      res.json(data);
+    });  
   },
 
   fetchUserPhotos: function(req, res, next) {
@@ -135,7 +139,7 @@ module.exports = {
 };
 
 var filterUserPicturesInRectangularRegion = function(coords, user) {
-  return {
+  var x = {
     $and: [
       {
         loc: {
@@ -150,6 +154,8 @@ var filterUserPicturesInRectangularRegion = function(coords, user) {
       filterPhotosUserHasAccessTo(user)
     ]  
   };
+  console.log(JSON.stringify(x))
+  return x;
 };
 
 var filterVisibleUserPicturesInVicinity = function(coords, maxRadius, user) {
@@ -176,7 +182,7 @@ var filterPhotosUserHasAccessTo = function(user) {
     $or: [
           {visibility: 2},
           {$and: [{visibility: 0}, {userId: user.id}]},
-          {$and: [{visibility: 1}, {userId: {$in: user.friends}}]}
+          {$and: [{visibility: 1}, {userIdString: {$in: user.friends}}]}
     ]
   };
 };

@@ -15,6 +15,10 @@ var PhotoSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true
   },
+  userIdString: {
+    type: String,
+    required: true
+  },
   views: {
     type: Number,
     default: 0
