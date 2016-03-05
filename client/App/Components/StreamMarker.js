@@ -32,13 +32,10 @@ class StreamMarker extends React.Component{
 
 var styles = StyleSheet.create({
   stream: {
-    width: 215,
-    height: 215,
     borderRadius: 150,
-    alignItems: 'center',
-    justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#13878f',
+    borderColor: '#0C585E',
+    borderStyle: 'dashed'
   }
 });
 
