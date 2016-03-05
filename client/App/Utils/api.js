@@ -135,8 +135,8 @@ var api = {
     });
   },
 
-  fetchUserStreamsObject(userId, callback) {
-    var url = 'http://' + config.url + ':8000/fetchUserStreamsObject?userId=' + userId;
+  fetchUserStreamsObjects(userId, callback) {
+    var url = 'http://' + config.url + ':8000/fetchUserStreamsObjects?userId=' + userId;
     return fetch(url, {
       method: 'GET',
       headers: {
