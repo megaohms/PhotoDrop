@@ -235,6 +235,27 @@ module.exports = {
 
   fetchStreamsObject: function(req, res, next){
     //fetch streamsObject with photo_id and .populate method, see fetch friends below
+    var streamsPhotosArr = [];
+    
+    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) })
+      .populate('streamsObjects', 'url loc visibility')
+      .exec(function (err, user) {
+        if (err) {
+          next(err);
+        } else {
+          for (var i = 0; i < user.streamsObjects.length; i++) {
+            streamsPhotosArr.push({
+              url: user.streamsObjects[i].url,
+              latLng: {
+                latitude: user.streamsObjects[i].loc.coordinates[0],
+                longitude: user.streamsObjects[i].loc.coordinates[1]
+              },
+              visibility: user.streamsObjects[i].visibility
+            });
+          }
+          res.json(streamsPhotosArr);
+        }
+      });
   },
   
   fetchUsersBySearchInput: function(req, res, next) {
