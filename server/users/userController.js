@@ -151,14 +151,32 @@ module.exports = {
   toggleStream: function(req, res, next) {
     var url = req.query.url;
     User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) }, function(err, user) {
-      if (err) next(err);
+      if (err) {
+        next(err);
+      }
       if (!user) {
         console.error('User was not found');
       } else {
         if (user.streams.indexOf(url) === -1) {
+          //add url to streams array in userModel object
           user.streams.push(url);
+          //add photoModel object to streamsArray
+          Photo.findOne({url: url})
+          .then((photo) => {
+            user.streamsObject.push(photo._id);  
+          })
+          .catch((err) => {
+            next(err);
+          });
         } else {
           user.streams.splice(user.streams.indexOf(url), 1);
+          Photo.findOne({url: url})
+          .then((photo) => {
+            user.streamsObject.splice(user.streamsObject.indexOf(photo._id), 1);  
+          })
+          .catch((err) => {
+            next(err);
+          });
         }
         user.save(function(err, savedUser) {
           res.json();
@@ -214,6 +232,8 @@ module.exports = {
       }
     });
   },
+
+  //fetchStreamsObject function for mapView
   
   fetchUsersBySearchInput: function(req, res, next) {
     var username = req.query.search;
