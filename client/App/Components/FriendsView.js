@@ -2,8 +2,8 @@ var React = require('react-native');
 var NavigationBar = require('react-native-navbar');
 var _ = require('lodash');
 var api = require('../Utils/api');
-var Icon = require('react-native-vector-icons/FontAwesome');
 var IconIon = require('react-native-vector-icons/Ionicons');
+var SearchBar = require('react-native-search-bar');
 var PhotoSwiperView = require('./PhotoSwiperView');
 
 var {
@@ -34,26 +34,10 @@ class FriendsView extends React.Component{
       statusBarHidden: false,
       friends: [],
       selectedIndex: 0,
-      userPhotosUrls: undefined,
-      userFavoritesUrls: undefined,
-      allViewablePhotos: undefined,
       isRefreshing: false,
       searchInput: undefined,
       foundUsers: []
     };
-  }
-
-  componentDidMount() {
-    api.fetchUserFriends(this.state.userId, (friends) => {
-      var friends = JSON.parse(friends)
-      this.setState({
-        friends: friends
-      })
-    })
-  }
-
-  componentWillUnmount() {
-    if(this.state.previousComponent==='settings') {StatusBarIOS.setHidden(false);}
   }
 
   handleSearchInput(event) {
@@ -78,7 +62,7 @@ class FriendsView extends React.Component{
     });
   }
 
-  addFriend(friendId) {
+  addFoundUserAsFriend(friendId) {
     api.addFriend(this.state.userId, friendId, (err, body) => {
       if (err) {
         console.error(err)
@@ -88,20 +72,25 @@ class FriendsView extends React.Component{
     })
   }
 
-  showStatusBar() {
-    this.setState({statusBarHidden: false});
-  }
-
   renderFoundUsers(foundUsers) {
     return foundUsers.map((user, index) => {
       return (
         <View style={styles.foundUserRow} key={user._id}>
           <Text style={styles.foundUser}>{user.username}</Text>
-          <TouchableHighlight onPress={() => {this.addFriend.bind(this)(user._id)}} style={styles.addFriendButton} underlayColor={'#FC9396'}>
-            <IconIon name="ios-plus-empty" size={40} color="#FF5A5F" style={styles.addFriendIcon} />
+          <TouchableHighlight onPress={() => {this.addFoundUserAsFriend.bind(this)(user._id)}} style={styles.buttonBorder} underlayColor={'#FC9396'}>
+            <IconIon name="ios-plus-empty" size={53} color="#FF5A5F" style={styles.addFriendIcon} />
           </TouchableHighlight>
         </View>
       )
+    })
+  }
+
+  fetchUserFriends() {
+    api.fetchUserFriends(this.state.userId, (friends) => {
+      var friends = JSON.parse(friends)
+      this.setState({
+        friends: friends
+      })
     })
   }
 
@@ -110,9 +99,21 @@ class FriendsView extends React.Component{
       return (
         <View style={styles.foundUserRow} key={friend._id}>
           <Text style={styles.foundUser}>{friend.username}</Text>
+          <TouchableHighlight onPress={() => {}} style={styles.buttonBorder} underlayColor={'#FC9396'}>
+            <IconIon name="ios-close-empty" size={53} color="#FF5A5F" style={styles.addFriendIcon} />
+          </TouchableHighlight>
         </View>
       )
     }) 
+  }
+
+  componentDidMount() {
+    this.refs.searchBar.focus();
+    this.fetchUserFriends();
+  }
+
+  componentWillUnmount() {
+    if(this.state.previousComponent==='settings') {StatusBarIOS.setHidden(false);}
   }
 
   _backButton() {
@@ -145,7 +146,11 @@ class FriendsView extends React.Component{
         <IconIon name='ios-arrow-thin-down' size={30} style={styles.backIcon} color="#FF5A5F"/>
       </TouchableHighlight>
     );
+
+    // selectedIndex: '0' displays Find Friends view and '1' displays Your Friends view
     if(this.state.selectedIndex === 0) {
+
+      // Return 'Find Friends View'
       return (
         <View style={{flex: 1, backgroundColor: '#ededed' }}>
           <NavigationBar 
@@ -161,17 +166,19 @@ class FriendsView extends React.Component{
             onChange={this._onChange.bind(this)}/>
           {this.state.friends ? null : <ActivityIndicatorIOS size={'large'} style={[styles.refreshingIcon, {height: 550}]} />}
           
-          <TextInput
-            placeholder={'Search by username or phone number'}
+          <SearchBar 
+            ref={'searchBar'}
+            placeholder={'Search by username'}
+            textFieldBackgroundColor={'white'}
+            keyboardType={'default'}
             autoCapitalize={'none'}
             autoCorrect={false}
-            maxLength={16}
-            style={styles.userInput}
-            returnKeyType={'go'}
+            returnKeyType={'default'}
             value={this.state.searchInput}
             onChange={this.handleSearchInput.bind(this)}
-            onSubmitEditing={this.searchForUser.bind(this)}
+            onPress={this.searchForUser.bind(this)}
           />
+
           <ScrollView 
             contentContainerStyle={styles.foundUserScrollView}
             refreshControl={
@@ -186,6 +193,8 @@ class FriendsView extends React.Component{
         </View>
       ); 
     } else {
+
+      // Return 'Your Friends' View
       return (
         <View style={{flex: 1, backgroundColor: '#ededed' }}>
           <NavigationBar 
@@ -258,32 +267,32 @@ var styles = StyleSheet.create({
     alignItems: 'stretch'
   },
   foundUserRow: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#b0b0b0'
   },
   foundUser: {
     flex: 4,
+    alignSelf: 'center',
     marginTop: 10,
     marginBottom: 15,
-    fontSize: 18,
-    paddingLeft: 10,
+    fontSize: 24,
+    paddingLeft: 20,
     fontFamily: 'circular',
     textAlign: 'left',
     color: '#616161'
   },
-  addFriendButton: {
-    flex: 1,
+  buttonBorder: {
     width: 50,
     height: 50,
     alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'transparent',
-    borderRadius: 25,
+    borderRadius: 35,
     borderWidth: 2,
-    borderColor: '#ededed'
-  },
-  addFriendIcon: {
-    width: 25,
-    height: 38,
-    backgroundColor: 'transparent'
+    margin: 10,
+    borderColor: '#FF5A5F'
   },
   noFriendsText: {
     marginTop: 65,

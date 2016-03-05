@@ -239,7 +239,8 @@ module.exports = {
   
   fetchUsersBySearchInput: function(req, res, next) {
     var username = req.query.search;
-    findUsers({ username: username }, function (err, foundUsers) {
+
+    findUsers({ username: username.toLowerCase() }, function (err, foundUsers) {
       if (err) {
         next(err);
       }
