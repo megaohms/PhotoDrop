@@ -150,39 +150,70 @@ module.exports = {
 
   toggleStream: function(req, res, next) {
     var url = req.query.url;
-    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) }, function(err, user) {
-      if (err) {
-        next(err);
-      }
-      if (!user) {
-        console.error('User was not found');
-      } else {
+    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) })
+      .then((user) => {
+        console.log('found user; user: ', user);
+        //push url to user streams
         if (user.streams.indexOf(url) === -1) {
+          console.log('push url to userStreams array; url: ', url);
           //add url to streams array in userModel object
           user.streams.push(url);
-          //add photoModel object to streamsArray
-          Photo.findOne({url: url})
-          .then((photo) => {
-            user.streamsObject.push(photo._id);  
+          user.save((err, savedUser) => {
+            var user = savedUser
+            console.log('saved url to userStreams array; savedUser: ', savedUser);
+            Photo.findOne({url: url})
+            .then((photo) => {
+              console.log('found Photo object; photo: ', photo);
+              //push photo id to photo object
+              //error: cannot read property 'push' of undefined
+              user.streamsObject.push(photo._id);
+              user.save((err, doubleSavedUser) => {
+                console.log('saved photo_id on userModel; doubleSavedUser: ', doubleSavedUser);
+                res.json(doubleSavedUser);
+              })
+              .catch((err) => {
+                console.log('error saving photo_id on userModel', err);
+                next(err);
+              });  
+            })
+            .catch((err) => {
+              console.log('error finding photo; photo: ', err);
+              next(err);
+            });
           })
           .catch((err) => {
+            console.log('error saving userStreams url', err);
             next(err);
           });
         } else {
           user.streams.splice(user.streams.indexOf(url), 1);
-          Photo.findOne({url: url})
-          .then((photo) => {
-            user.streamsObject.splice(user.streamsObject.indexOf(photo._id), 1);  
-          })
-          .catch((err) => {
-            next(err);
+          user.save((err, savedUser) => {
+            Photo.findOne({url: url})
+            .then((photo) => {
+              //splice photo id to photo object
+              savedUser.streamsObject.splice(savedUser.streamsObject.indexOf(photo._id), 1);
+              savedUser.save((err, doubleSavedUser) => {
+                res.json(doubleSavedUser);
+              })
+              .catch((err) => {
+                next(err);
+              });  
+            })
+            .catch((err) => {
+              next(err);
+            });
           });
         }
-        user.save(function(err, savedUser) {
-          res.json();
-        });
-      }
-    });
+      })
+      .catch((err) => {
+        if (err) {
+          next(err);
+        }
+        if (!user) {
+          console.error('User was not found');
+        }
+      });
+    // });
   },
 
   getPhotoData: function(req, res, next) {
