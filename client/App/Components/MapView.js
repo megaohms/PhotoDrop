@@ -37,13 +37,6 @@ class Map extends React.Component {
       radius: 50,
       photos: null //[]
     };
-
-    api.fetchUserStreams(this.state.currentUser, function(streamedPhotos) {
-      //this does something with the 
-      var photoStream = JSON.parse(streamedPhotos);
-      this.setState({ currentUserStream: photoStream });
-    });
-
   }
 
   componentDidMount() {
@@ -55,6 +48,12 @@ class Map extends React.Component {
         .then((photos) => {
           var photosArr = JSON.parse(photos);
           this.setState({ photos: photosArr });
+        });
+
+        api.fetchUserStreams(this.state.currentUser, function(streamedPhotos) {
+          //this does something with the 
+          var photoStream = JSON.parse(streamedPhotos);
+          this.setState({ currentUserStream: photoStream });
         });
       }
     }, 2000);
@@ -130,6 +129,7 @@ class Map extends React.Component {
               <CircleMarker navigator={this.props.navigator}/>
             </MapView.Marker>
 
+
             { this.state.photos.filter(photo => !photo.photoIsVisible).map((photoLocation, index) => {
               return (
                 <MapView.Marker key={index} coordinate={{latitude: photoLocation.loc.coordinates[1], longitude: photoLocation.loc.coordinates[0]}}>
@@ -145,6 +145,15 @@ class Map extends React.Component {
                 </MapView.Marker>
               );
             })}
+
+            { 
+            // var polyLineCoordinates = [];
+            //   this.state.currentUserStream.forEach((photo) => {
+            //     polyLineCoordinates.push({latitude: photo.loc.coordinates[1], longitude: photo.loc.coordinates[0]});
+            //   }
+            //   <MapView.Polyline coordinates={polyLineCoordinates} />
+            // )
+            }
           </MapView>
 
           <TouchableHighlight onPress={this.onLocationPressed.bind(this)} style={styles.arrowButton} underlayColor={'#FF5A5F'}>

@@ -150,21 +150,39 @@ module.exports = {
 
   toggleStream: function(req, res, next) {
     var url = req.query.url;
-    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) }, function(err, user) {
-      if (err) next(err);
-      if (!user) {
-        console.error('User was not found');
-      } else {
-        if (user.streams.indexOf(url) === -1) {
-          user.streams.push(url);
-        } else {
-          user.streams.splice(user.streams.indexOf(url), 1);
-        }
-        user.save(function(err, savedUser) {
-          res.json();
-        });
+    Photo.findOne({url: url})
+      .then((photo) => {
+        User.findOne({ _id: photo.userId})
+          .then((foundUser) => {
+          // if adding to stream
+            if(foundUser.streams.indexOf(url) === -1) {
+              foundUser.streams.push(photo.url);
+              foundUser.streamsObjects.push(photo._id);
+              foundUser.save((err, savedUser) => {
+                if (err) {
+                  next(err);
+                }
+                res.send(savedUser);
+              });
+            } else {
+              foundUser.streams.splice(foundUser.streams.indexOf(photo.url), 1);
+              foundUser.streamsObjects.splice(foundUser.streamsObjects.indexOf(photo._id), 1);
+              foundUser.save((err, savedUser) => {
+                if (err) {
+                  next(err);
+                }
+                res.send(savedUser);
+              });
+            }
+          })
+          .catch((err) => {
+            console.log('error finding user', err);
+          });
+      })
+      .catch( (err) => {
+        console.log('error finding photo', err);
       }
-    });
+    );
   },
 
   getPhotoData: function(req, res, next) {
@@ -213,6 +231,10 @@ module.exports = {
         res.json(user.streams);
       }
     });
+  },
+
+  fetchStreamsObject: function(req, res, next){
+    //fetch streamsObject with photo_id and .populate method, see fetch friends below
   },
   
   fetchUsersBySearchInput: function(req, res, next) {
