@@ -233,7 +233,9 @@ module.exports = {
     });
   },
 
-  //fetchStreamsObject function for mapView
+  fetchStreamsObject: function(req, res, next){
+    //fetch streamsObject with photo_id and .populate method, see fetch friends below
+  },
   
   fetchUsersBySearchInput: function(req, res, next) {
     var username = req.query.search;
