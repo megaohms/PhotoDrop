@@ -271,22 +271,24 @@ module.exports = {
     var currentUserId = req.query.userId;
     var friendsArr = [];
     
-    // User.findOne({ _id: currentUserId })
-    //   .populate('friends')
-    //   .exec(function (err, friends) {
-    //     if (err) {
-    //       next(err);
-    //     } else {
-    //       console.log('friends inside fetchFriends', friends);
-    //       for (var i = 0; i < friends.length; i++) {
-    //         var friend = {};
-    //         friend._id = friends[i]._id;
-    //         friend.username = friends[i].username;
-    //         friendsArr.push[friend];
-    //       }
-    //       res.json(friendsArr);
-    //     }
-    //   });
-    res.json(friendsArr);
+/* Work in progress
+    User.findOne({ _id: currentUserId })
+      .populate('friends')
+      .exec(function (err, friends) {
+        if (err) {
+          next(err);
+        } else {
+          console.log('friends inside fetchFriends', friends);
+          for (var i = 0; i < friends.length; i++) {
+            var friend = {};
+            friend._id = friends[i]._id;
+            friend.username = friends[i].username;
+            friendsArr.push[friend];
+          }
+          res.json(friendsArr);
+        }
+      });
+      */
+      res.json(friendsArr);
   }
 };
