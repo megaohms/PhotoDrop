@@ -150,6 +150,91 @@ module.exports = {
 
   toggleStream: function(req, res, next) {
     var url = req.query.url;
+    Photo.findOne({url: url})
+      .then((photo) => {
+        console.log('found Photo object; photo: ', photo);
+        User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId)})
+          .then((foundUser) => {
+          // if adding to stream
+            if(foundUser.streams.indexOf(url) === -1) {
+              foundUser.streams.push(photo.url);
+              foundUser.streamsObject.push(photo._id);
+              foundUser.save((err, savedUser) => {
+                if (err) {
+                  next(err);
+                }
+                res.send(savedUser)
+              });
+            } else {
+              foundUser.streams.splice(user.streams.indexOf(photo.url), 1);
+              foundUser.streamsObject.splice(foundUser.streamsObject.indexOf(photo._id), 1);
+              foundUser.save((err, savedUser) => {
+                if (err) {
+                  next(err);
+                }
+                res.send(savedUser)
+              });
+            }
+          })
+          .catch((err) => {
+            console.log('error finding user', err);
+          });
+/*        if(){
+          //push photo id to photo object
+          User.findOneAndUpdate(
+            { _id: mongoose.mongo.ObjectID(req.query.userId)}, // conditions of find/search
+            { streams: streams.push(photo.url),                // properties to update
+              streamsObject: streamsObject.push(photo._id)
+            },
+            { new: true,                     // options object, will return updated object
+            },
+            (err, newObj) => {                                 // callback for executing on new object
+              if (err) {
+                next(err);
+              }
+              console.log('saved photo_id on userModel; doubleSavedUser: ', doubleSavedUser);
+              res.json(doubleSavedUser);
+              
+            }
+          );
+        } else {       
+        // untoggle from streams/streamsObject
+          User.findOneAndUpdate(
+            { _id: mongoose.mongo.ObjectID(req.query.userId)},              // conditions of find/search
+            { streams: streams.splice(user.streams.indexOf(photo.url), 1),  // properties to update
+              streamsObject: streamsObject.splice(savedUser.streamsObject.indexOf(photo._id), 1),
+            },
+            { new: true,                                  // options object, will return
+              upsert: true                                                  // updated object, creates new object if doesn't exist
+            },
+            (err, savedUser) => {                                           // callback for executing on new object
+              if (err) {
+                next(err);
+              }
+              console.log('saved photo_id on userModel; doubleSavedUser: ', savedUser);
+              res.json(savedUser);
+            }
+          );
+        }
+      user.streamsObject.push(photo._id);
+          user.save((err, doubleSavedUser) => {
+            console.log('saved photo_id on userModel; doubleSavedUser: ', doubleSavedUser);
+            res.json(doubleSavedUser);
+          })
+          .catch((err) => {
+            console.log('error saving photo_id on userModel', err);
+            next(err);
+          }); 
+*/
+      }
+    )
+    .catch( (err) => {
+      console.log('error finding photo', err);
+    });
+/*    // .catch((err) => {
+      //   console.log('error finding photo; photo: ', err);
+      //   next(err);
+      // });
     User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) })
       .then((user) => {
         console.log('found user; user: ', user);
@@ -213,7 +298,7 @@ module.exports = {
           console.error('User was not found');
         }
       });
-    // });
+*/
   },
 
   getPhotoData: function(req, res, next) {
