@@ -238,7 +238,7 @@ module.exports = {
           next(new Error('User does not exist'));
         } else {
           user.friends.push(mongoose.mongo.ObjectID(friendRequest.friendId));
-          user.friendIdsString.push(mongoose.mongo.ObjectID(friendRequest.friendId));
+          user.friendIdsString.push(friendRequest.friendId);
           user.save(function(err, savedUser) {
             if (err) { 
               next(new Error(err));

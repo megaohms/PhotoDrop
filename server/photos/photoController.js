@@ -61,10 +61,8 @@ module.exports = {
       ]
     ];
     maxRadius = maxRadius || 0;
-    
     return module.exports.getPhotosInRange(maxRadius, lat, lon, userObj)
       .then(visiblePhotos => {
-        console.log( visiblePhotos.map(p => p._id));
         return Photo.collection.aggregate([
           { $match: filterUserPicturesInRectangularRegion(coords, userObj) },
           { $project:
@@ -94,10 +92,9 @@ module.exports = {
     var londelta = Number(req.query.londelta);
     var radius = Number(req.query.radius) || 50;
 
-    return User.findOne({_id: req.query.userId}, '_id username friends')
+    return User.findOne({_id: req.query.userId}, '_id username friendIdsString')
     .then(user => module.exports.getAllUserPhotosInArea(lat, lon, latdelta, londelta, radius, user))
     .then(data => {
-      console.log(data.length);
       res.json(data);
     });  
   },
@@ -132,7 +129,7 @@ module.exports = {
   fetchPhotos: function(req, res, next) {
     var maxDistance = Number(req.query.radius);
     
-    return User.findOne({_id: req.query.userId}, '_id username friends')
+    return User.findOne({_id: req.query.userId}, '_id username')
     .then(user => module.exports.getPhotosInRange(maxDistance, req.query.lat, req.query.lon, user))
     .then(data => res.json(data));
   }
@@ -154,7 +151,7 @@ var filterUserPicturesInRectangularRegion = function(coords, user) {
       filterPhotosUserHasAccessTo(user)
     ]  
   };
-  console.log(JSON.stringify(x))
+
   return x;
 };
 
@@ -182,7 +179,7 @@ var filterPhotosUserHasAccessTo = function(user) {
     $or: [
           {visibility: 2},
           {$and: [{visibility: 0}, {userId: user.id}]},
-          {$and: [{visibility: 1}, {userIdString: {$in: user.friends}}]}
+          {$and: [{visibility: 1}, {userIdString: {$in: user.friendIdsString}}]}
     ]
   };
 };
