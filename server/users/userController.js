@@ -168,8 +168,8 @@ module.exports = {
                 res.send(savedUser);
               });
             } else {
-              foundUser.streams.splice(user.streams.indexOf(photo.url), 1);
-              foundUser.streamsObjects.splice(foundUser.streamsObject.indexOf(photo._id), 1);
+              foundUser.streams.splice(foundUser.streams.indexOf(photo.url), 1);
+              foundUser.streamsObjects.splice(foundUser.streamsObjects.indexOf(photo._id), 1);
               foundUser.save((err, savedUser) => {
                 if (err) {
                   next(err);
