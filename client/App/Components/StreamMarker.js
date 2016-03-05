@@ -23,8 +23,7 @@ class StreamMarker extends React.Component{
   render() {
     return (
       <View >
-        <View style={styles.stream}>
-        </View>
+        <View style={styles.stream} />
       </View>
     );
   }
