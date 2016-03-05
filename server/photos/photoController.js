@@ -178,7 +178,8 @@ var filterPhotosUserHasAccessTo = function(user) {
   return {
     $or: [
           {visibility: 2},
-          {$and: [{visibility: 0}, {userId: user.id}]},
+          {$and: [{visibility: 0}, {userId: user._id}]},
+          {$and: [{visibility: 1}, {userId: user._id}]},
           {$and: [{visibility: 1}, {userIdString: {$in: user.friendIdsString}}]}
     ]
   };
