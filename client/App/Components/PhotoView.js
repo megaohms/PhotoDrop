@@ -33,7 +33,7 @@ class PhotoView extends React.Component{
         views: data.views,
         uploader: data.username,
         favorited: data.favorited,
-        streamed: data.streamed 
+        streamed: data.streamed
       })
     })
   }
@@ -42,7 +42,7 @@ class PhotoView extends React.Component{
   componentWillUnmount() {
     if(this.props.showStatusBar) {this.props.showStatusBar();}
   }
-  
+
   _streamImage() {
     api.toggleStream(this.state.userId, this.state.url, (result) => {
       this.state.streamed ? this.setState({streamed:false}) : this.setState({streamed:true})
@@ -120,7 +120,7 @@ class PhotoView extends React.Component{
               </View>
               <View style={styles.photoInfoContainer}>
                 {username}
-                {views} 
+                {views}
               </View>
             </View>
           </Image>
@@ -213,8 +213,7 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
-    marginRight: 15,
-    marginTop: 15
+    margin: 10
   },
   favoriteButton:{
     width:50,

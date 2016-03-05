@@ -231,12 +231,13 @@ module.exports = {
 
   addFriend: function(req, res, next) {
     var friendRequest = JSON.parse(Object.keys(req.body)[0]);
+
     findUser({ _id: friendRequest.userId })
       .then(function(user) {
         if (!user) {
           next(new Error('User does not exist'));
         } else {
-          user.friends.push(friendRequest.friendId);
+          user.friends.push(mongoose.mongo.ObjectID(friendRequest.friendId));
           user.save(function(err, savedUser) {
             if (err) { 
               next(new Error(err));
@@ -246,7 +247,7 @@ module.exports = {
                   if (!user) {
                     next(new Error('User does not exist'));
                   } else {
-                    user.friends.push(friendRequest.userId);
+                    user.friends.push(mongoose.mongo.ObjectID(friendRequest.userId));
                     user.save(function(err, savedUser) {
                       if (err) { 
                         next(new Error(err));  
@@ -266,34 +267,28 @@ module.exports = {
   },
 
   fetchFriends: function(req, res, next) {
-    res.send();
-  /* Work in progress  
 
     var currentUserId = req.query.userId;
-    var friends = [];
-    findUser({ _id: currentUserId })
-      .then( (foundUser) => {
-        if (!foundUser) {
-          next(new (Error));
+    var friendsArr = [];
+    
+/* Work in progress
+    User.findOne({ _id: currentUserId })
+      .populate('friends')
+      .exec(function (err, friends) {
+        if (err) {
+          next(err);
         } else {
-          for (var i = 0; i < foundUsers.friends.length; i++) {
-            friendId = foundUsers.friends[i];
-            findUser({ _id: friendId })
-              .then((friend) => {
-                friends.push(friend);
-              })
-              .fail( (err) => {
-                next(err);
-              });
+          console.log('friends inside fetchFriends', friends);
+          for (var i = 0; i < friends.length; i++) {
+            var friend = {};
+            friend._id = friends[i]._id;
+            friend.username = friends[i].username;
+            friendsArr.push[friend];
           }
-          res.json(friends);
-        } 
-      })
-      .fail(function(error) {
-        next(error);
+          res.json(friendsArr);
+        }
       });
-
       */
-
+      res.json(friendsArr);
   }
 };
