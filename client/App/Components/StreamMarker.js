@@ -12,16 +12,17 @@ class StreamMarker extends React.Component{
     super(props);
   }
 
-  onMarkerPressed() {
-    this.props.navigator.push({
-      sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
-      component: PhotosView
-    });
-  }
+//eventually make this show who's stream you're looking at
+  // onMarkerPressed() {
+  //   this.props.navigator.push({
+  //     sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
+  //     component: PhotosView
+  //   });
+  // }
 
   render() {
     return (
-      <View style={styles.streamContainer}>
+      <View >
         <View style={styles.stream}>
         </View>
       </View>
@@ -30,10 +31,6 @@ class StreamMarker extends React.Component{
 };
 
 var styles = StyleSheet.create({
-  streamContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   stream: {
     width: 215,
     height: 215,
