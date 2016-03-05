@@ -60,11 +60,12 @@ class PhotosView extends React.Component{
       allViewablePhotos: undefined,
       isRefreshing: false,
     };
+    
     if(this.state.favorites) {
       api.fetchUserFavorites(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
         this.setState({ userFavoritesUrls: photosArr });
-      })
+      });
       api.fetchUserPhotos(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {
@@ -72,26 +73,28 @@ class PhotosView extends React.Component{
         });
         this.setState({ imageUrls: photosUrls });
         this.setState({ userPhotosUrls: photosUrls });
-      })
-        if ( true ) {
-        // NEW: grab streams photos
-        // TODO: needs a function in api called api.fetchUserStreams
-        // set the userStreamsUrls as the collection of photos
-        api.fetchUserStreams(this.state.userId, (photos) => {
-          var photosArr = JSON.parse(photos);
-          console.log(photosArr);
-          this.setState({ userStreamsUrls: photosArr });
-          console.log(this.state.userStreamsUrls);
-        })
-        api.fetchUserPhotos(this.state.userId, (photos) => {
-          var photosArr = JSON.parse(photos);
-          var photosUrls = photosArr.map((photo) => {
-            return photo.url;
-          });
-          this.setState({ imageUrls: photosUrls });
-          this.setState({ userPhotosUrls: photosUrls });
-        })
-      }
+      });
+    } 
+      
+    if ( true ) {
+      // NEW: grab streams photos
+      // TODO: needs a function in api called api.fetchUserStreams
+      // set the userStreamsUrls as the collection of photos
+      api.fetchUserStreams(this.state.userId, (photos) => {
+        var photosArr = JSON.parse(photos);
+        console.log(photosArr);
+        this.setState({ userStreamsUrls: photosArr });
+        console.log(this.state.userStreamsUrls);
+      });
+      
+      api.fetchUserPhotos(this.state.userId, (photos) => {
+        var photosArr = JSON.parse(photos);
+        var photosUrls = photosArr.map((photo) => {
+          return photo.url;
+        });
+        this.setState({ imageUrls: photosUrls });
+        this.setState({ userPhotosUrls: photosUrls });
+      });
     } else {
       navigator.geolocation.getCurrentPosition(
         location => {
@@ -99,15 +102,17 @@ class PhotosView extends React.Component{
             latitude: location.coords.latitude,
             longitude: location.coords.longitude
           });
-        }
-      );
-      api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+        });
+
+      // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+      api.getViewablePhotosInRange(this.state.latitude, this.state.longitude, 50, this.state.userId)
+      .then((photos) => { 
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {
           return photo.url;
         });
         this.setState({ imageUrls: photosUrls });
-      })
+      });
     }
   }
 
@@ -122,8 +127,8 @@ class PhotosView extends React.Component{
   }
 
   componentWillUnmount() {
-    if(this.state.previousComponent==='settings') {StatusBarIOS.setHidden(false);}
-    if(this.state.previousComponent==='map') {StatusBarIOS.setHidden(true);}
+    if(this.state.previousComponent === 'settings') { StatusBarIOS.setHidden(false); }
+    if(this.state.previousComponent === 'map') { StatusBarIOS.setHidden(true); }
   }
 
   handleRotation(event) {
@@ -158,7 +163,7 @@ class PhotosView extends React.Component{
           },
         }
       });
-    }
+    };
   }
 
   showStatusBar() {
@@ -172,8 +177,8 @@ class PhotosView extends React.Component{
         <TouchableHighlight key={index} onPress={this.showImageFullscreen(uri, index)}>
           <Image key={index} style={[styles.image, this.calculatedSize()]} source={{uri: uri}} />
         </TouchableHighlight>
-      )
-    })
+      );
+    });
   }
 
   renderImagesInGroupsOf(count) {
@@ -182,8 +187,8 @@ class PhotosView extends React.Component{
         <View style={styles.row} key={index}>
           {this.renderRow(imagesForRow)}
         </View>
-      )
-    })
+      );
+    });
   }
 
   _backButton() {
@@ -195,12 +200,12 @@ class PhotosView extends React.Component{
       selectedIndex: event.nativeEvent.selectedSegmentIndex,
     });
     if(event.nativeEvent.selectedSegmentIndex===0) {
-        this.setState({ imageUrls: this.state.userPhotosUrls});
+      this.setState({ imageUrls: this.state.userPhotosUrls});
     } else if(event.nativeEvent.selectedSegmentIndex===1) {
-        this.setState({ imageUrls: this.state.userFavoritesUrls});
-        // NEW: Add the streams imageUrls
+      this.setState({ imageUrls: this.state.userFavoritesUrls});
+      // NEW: Add the streams imageUrls
     } else if(event.nativeEvent.selectedSegmentIndex===2) {
-        this.setState({ imageUrls: this.state.userStreamsUrls});
+      this.setState({ imageUrls: this.state.userStreamsUrls});
     }
   }
 
@@ -210,7 +215,8 @@ class PhotosView extends React.Component{
       api.fetchUserFavorites(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
         this.setState({ userFavoritesUrls: photosArr });
-      })
+      });
+      
       api.fetchUserPhotos(this.state.userId, (photos) => {
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {
@@ -218,13 +224,14 @@ class PhotosView extends React.Component{
         });
         // this.setState({ imageUrls: photosUrls });
         this.setState({ userPhotosUrls: photosUrls });
-      })
-      if(this.state.selectedIndex===0) {
+      });
+      
+      if(this.state.selectedIndex === 0) {
         this.setState({imageUrls: this.state.userPhotosUrls});
-      } else if(this.state.selectedIndex===1) {
+      } else if (this.state.selectedIndex === 1) {
         this.setState({imageUrls: this.state.userFavoritesUrls});
         // NEW: Add stream imageUrls selection here
-      } else if(this.state.selectedIndex===2) {
+      } else if (this.state.selectedIndex === 2) {
         this.setState({imageUrls: this.state.userStreamsUrls});
       }
     } else {
@@ -236,14 +243,17 @@ class PhotosView extends React.Component{
           });
         }
       );
-      api.fetchPhotos(this.state.latitude, this.state.longitude, 50, (photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
+
+      api.getViewablePhotosInRange(this.state.latitude, this.state.longitude, 50, this.state.userId) 
+      .then((photos) => { // need to pass in the radius (in m) from the MapView; hardcoding as 50m for now
         var photosArr = JSON.parse(photos);
         var photosUrls = photosArr.map((photo) => {
           return photo.url;
         });
         this.setState({ imageUrls: photosUrls });
-      })
+      });
     }
+    
     setTimeout(() => {
       this.setState({
         isRefreshing: false,
@@ -256,7 +266,7 @@ class PhotosView extends React.Component{
     // MAYBE: Do I need to add a this.state.streams here to render in the <TEXT></TEXT>?
     var pageTitle = (
        this.state.favorites ? <Text style={styles.pageTitle}>Your Photos</Text> : <Text style={styles.pageTitle}>Photos Near You</Text>
-    )
+    );
     var backButton = (
       <TouchableHighlight onPress={this._backButton.bind(this)} underlayColor={'white'}>
         <IconIon name='ios-arrow-thin-down' size={30} style={styles.backIcon} color="#FF5A5F"/>
@@ -277,14 +287,14 @@ class PhotosView extends React.Component{
             tintColor="#FF5A5F"
             onChange={this._onChange.bind(this)}/>
           {this.state.imageUrls ? null : <ActivityIndicatorIOS size={'large'} style={[styles.centering, {height: 550}]} />}
-          {this.state.imageUrls && this.state.selectedIndex===0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>{`Looks like you haven't taken any photos...`}</Text>   : null}
-          {this.state.imageUrls && this.state.selectedIndex===0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the camera and drop a photo!</Text>  : null}
+          {this.state.imageUrls && this.state.selectedIndex === 0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>{`Looks like you haven't taken any photos...`}</Text>   : null}
+          {this.state.imageUrls && this.state.selectedIndex === 0 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the camera and drop a photo!</Text>  : null}
 
-          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no favorite photos...</Text>   : null}
-          {this.state.imageUrls && this.state.selectedIndex===1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
+          {this.state.imageUrls && this.state.selectedIndex === 1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no favorite photos...</Text>   : null}
+          {this.state.imageUrls && this.state.selectedIndex === 1 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
 
-          {this.state.imageUrls && this.state.selectedIndex===2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no streams photos...</Text>   : null}
-          {this.state.imageUrls && this.state.selectedIndex===2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
+          {this.state.imageUrls && this.state.selectedIndex === 2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like you have no streams photos...</Text>   : null}
+          {this.state.imageUrls && this.state.selectedIndex === 2 && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Swipe to the map and checkout photos around you!</Text>  : null}
 
 
 
@@ -311,8 +321,8 @@ class PhotosView extends React.Component{
             statusBar={{hidden: this.state.statusBarHidden}}
             leftButton={backButton}/>
           {this.state.imageUrls ? null : <ActivityIndicatorIOS size={'large'} style={[styles.centering, {height: 550}]} />}
-          {this.state.imageUrls && !this.state.imageUrls.length  ? <Text style={styles.noPhotosText}>Looks like there are no photos near you...</Text>   : null}
-          {this.state.imageUrls && !this.state.imageUrls.length  ? <Text style={styles.noPhotosText2}>Be the first one to drop a photo!</Text>  : null}
+          {this.state.imageUrls && !this.state.imageUrls.length ? <Text style={styles.noPhotosText}>Looks like there are no photos near you...</Text>   : null}
+          {this.state.imageUrls && !this.state.imageUrls.length ? <Text style={styles.noPhotosText2}>Be the first one to drop a photo!</Text>  : null}
 
 
           <ScrollView

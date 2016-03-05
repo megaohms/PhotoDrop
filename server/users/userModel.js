@@ -24,6 +24,10 @@ var UserSchema = new mongoose.Schema({
     default: []
   },
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friendIdsString: {
+    type: Array,
+    default: []
+  },
   salt: String
 });
 
