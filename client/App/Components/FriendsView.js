@@ -4,6 +4,7 @@ var _ = require('lodash');
 var api = require('../Utils/api');
 var Icon = require('react-native-vector-icons/FontAwesome');
 var IconIon = require('react-native-vector-icons/Ionicons');
+var SearchBar = require('react-native-search-bar');
 var PhotoSwiperView = require('./PhotoSwiperView');
 
 var {
@@ -44,6 +45,7 @@ class FriendsView extends React.Component{
   }
 
   componentDidMount() {
+    this.refs.searchBar.focus();
     api.fetchUserFriends(this.state.userId, (friends) => {
       var friends = JSON.parse(friends)
       this.setState({
@@ -161,6 +163,18 @@ class FriendsView extends React.Component{
             onChange={this._onChange.bind(this)}/>
           {this.state.friends ? null : <ActivityIndicatorIOS size={'large'} style={[styles.refreshingIcon, {height: 550}]} />}
           
+          <SearchBar 
+            ref={'searchBar'}
+            placeholder={'Search by username'}
+            textFieldBackgroundColor={'white'}
+            autoCapitalize={'none'}
+            autoCorrect={false}
+            returnKeyType={'go'}
+            value={this.state.searchInput}
+            onChange={this.handleSearchInput.bind(this)}
+            onSubmitEditing={this.searchForUser.bind(this)}
+          />
+
           <TextInput
             placeholder={'Search by username or phone number'}
             autoCapitalize={'none'}
