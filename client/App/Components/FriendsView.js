@@ -32,8 +32,7 @@ class FriendsView extends React.Component{
       userId: this.props.route.userId,
       previousComponent: this.props.route.previousComponent,
       statusBarHidden: false,
-      friendIDs: [],
-      friendObjects: [],
+      friends: [],
       selectedIndex: 0,
       userPhotosUrls: undefined,
       userFavoritesUrls: undefined,
@@ -48,7 +47,7 @@ class FriendsView extends React.Component{
     api.fetchUserFriends(this.state.userId, (friends) => {
       var friends = JSON.parse(friends)
       this.setState({
-        friendIDs: friends
+        friends: friends
       })
     })
   }
@@ -107,7 +106,7 @@ class FriendsView extends React.Component{
   }
 
   renderFriends() {
-    return this.state.friendIDs.map((friend, index) => {
+    return this.state.friends.map((friend, index) => {
       return (
         <View style={styles.foundUserRow} key={friend._id}>
           <Text style={styles.foundUser}>{friend.username}</Text>
@@ -160,7 +159,7 @@ class FriendsView extends React.Component{
             style={styles.segments} 
             tintColor="#FF5A5F"
             onChange={this._onChange.bind(this)}/>
-          {this.state.friendIDs ? null : <ActivityIndicatorIOS size={'large'} style={[styles.refreshingIcon, {height: 550}]} />}
+          {this.state.friends ? null : <ActivityIndicatorIOS size={'large'} style={[styles.refreshingIcon, {height: 550}]} />}
           
           <TextInput
             placeholder={'Search by username or phone number'}
@@ -200,7 +199,7 @@ class FriendsView extends React.Component{
             style={styles.segments} 
             tintColor="#FF5A5F"
             onChange={this._onChange.bind(this)}/>
-          {this.state.friendIDs ? null : <ActivityIndicatorIOS size={'large'} style={[styles.refreshingIcon, {height: 550}]} />}
+          {this.state.friends ? null : <ActivityIndicatorIOS size={'large'} style={[styles.refreshingIcon, {height: 550}]} />}
           
           <ScrollView 
             contentContainerStyle={styles.foundUserScrollView}

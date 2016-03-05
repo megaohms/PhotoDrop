@@ -23,10 +23,7 @@ var UserSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  friends: {
-    type: Array,
-    default: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
-  },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   salt: String
 });
 
