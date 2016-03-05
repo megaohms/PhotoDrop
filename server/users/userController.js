@@ -315,7 +315,7 @@ module.exports = {
     var friendsArr = [];
     
     User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) })
-      .populate('friends', '_id username')
+      .populate('friends', '_id username streamsObjects')
       .exec(function (err, user) {
         if (err) {
           next(err);
