@@ -23,7 +23,14 @@ var UserSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  streamsObjects: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Photo' 
+  }],
+  friends: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  }],
   friendIdsString: {
     type: Array,
     default: []
