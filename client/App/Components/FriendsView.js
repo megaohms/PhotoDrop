@@ -258,10 +258,13 @@ var styles = StyleSheet.create({
     alignItems: 'stretch'
   },
   foundUserRow: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#b0b0b0'
   },
   foundUser: {
     flex: 4,
+    alignSelf: 'center',
     marginTop: 10,
     marginBottom: 15,
     fontSize: 18,
@@ -271,19 +274,16 @@ var styles = StyleSheet.create({
     color: '#616161'
   },
   addFriendButton: {
-    flex: 1,
     width: 50,
     height: 50,
     alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'transparent',
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#ededed'
-  },
-  addFriendIcon: {
-    width: 25,
-    height: 38,
-    backgroundColor: 'transparent'
+    margin: 10,
+    borderColor: '#FF5A5F'
   },
   noFriendsText: {
     marginTop: 65,
