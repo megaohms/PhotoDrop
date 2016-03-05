@@ -152,16 +152,13 @@ module.exports = {
     var url = req.query.url;
     Photo.findOne({url: url})
       .then((photo) => {
-        console.log('found Photo object; photo: ', photo);
         User.findOne({ _id: photo.userId})
           .then((foundUser) => {
           // if adding to stream
             if(foundUser.streams.indexOf(url) === -1) {
-              console.log('foundUser has streams but not photo');
               foundUser.streams.push(photo.url);
               foundUser.streamsObjects.push(photo._id);
               foundUser.save((err, savedUser) => {
-                console.log('foundUser has updated streams and streamsObject props');
                 if (err) {
                   next(err);
                 }
@@ -181,126 +178,11 @@ module.exports = {
           .catch((err) => {
             console.log('error finding user', err);
           });
-/*        if(){
-          //push photo id to photo object
-          User.findOneAndUpdate(
-            { _id: mongoose.mongo.ObjectID(req.query.userId)}, // conditions of find/search
-            { streams: streams.push(photo.url),                // properties to update
-              streamsObject: streamsObject.push(photo._id)
-            },
-            { new: true,                     // options object, will return updated object
-            },
-            (err, newObj) => {                                 // callback for executing on new object
-              if (err) {
-                next(err);
-              }
-              console.log('saved photo_id on userModel; doubleSavedUser: ', doubleSavedUser);
-              res.json(doubleSavedUser);
-              
-            }
-          );
-        } else {       
-        // untoggle from streams/streamsObject
-          User.findOneAndUpdate(
-            { _id: mongoose.mongo.ObjectID(req.query.userId)},              // conditions of find/search
-            { streams: streams.splice(user.streams.indexOf(photo.url), 1),  // properties to update
-              streamsObject: streamsObject.splice(savedUser.streamsObject.indexOf(photo._id), 1),
-            },
-            { new: true,                                  // options object, will return
-              upsert: true                                                  // updated object, creates new object if doesn't exist
-            },
-            (err, savedUser) => {                                           // callback for executing on new object
-              if (err) {
-                next(err);
-              }
-              console.log('saved photo_id on userModel; doubleSavedUser: ', savedUser);
-              res.json(savedUser);
-            }
-          );
-        }
-      user.streamsObject.push(photo._id);
-          user.save((err, doubleSavedUser) => {
-            console.log('saved photo_id on userModel; doubleSavedUser: ', doubleSavedUser);
-            res.json(doubleSavedUser);
-          })
-          .catch((err) => {
-            console.log('error saving photo_id on userModel', err);
-            next(err);
-          }); 
-*/
-      }
-    )
-    .catch( (err) => {
-      console.log('error finding photo', err);
-    });
-/*    // .catch((err) => {
-      //   console.log('error finding photo; photo: ', err);
-      //   next(err);
-      // });
-    User.findOne({ _id: mongoose.mongo.ObjectID(req.query.userId) })
-      .then((user) => {
-        console.log('found user; user: ', user);
-        //push url to user streams
-        if (user.streams.indexOf(url) === -1) {
-          console.log('push url to userStreams array; url: ', url);
-          //add url to streams array in userModel object
-          user.streams.push(url);
-          user.save((err, savedUser) => {
-            var user = savedUser
-            console.log('saved url to userStreams array; savedUser: ', savedUser);
-            Photo.findOne({url: url})
-            .then((photo) => {
-              console.log('found Photo object; photo: ', photo);
-              //push photo id to photo object
-              //error: cannot read property 'push' of undefined
-              user.streamsObject.push(photo._id);
-              user.save((err, doubleSavedUser) => {
-                console.log('saved photo_id on userModel; doubleSavedUser: ', doubleSavedUser);
-                res.json(doubleSavedUser);
-              })
-              .catch((err) => {
-                console.log('error saving photo_id on userModel', err);
-                next(err);
-              });  
-            })
-            .catch((err) => {
-              console.log('error finding photo; photo: ', err);
-              next(err);
-            });
-          })
-          .catch((err) => {
-            console.log('error saving userStreams url', err);
-            next(err);
-          });
-        } else {
-          user.streams.splice(user.streams.indexOf(url), 1);
-          user.save((err, savedUser) => {
-            Photo.findOne({url: url})
-            .then((photo) => {
-              //splice photo id to photo object
-              savedUser.streamsObject.splice(savedUser.streamsObject.indexOf(photo._id), 1);
-              savedUser.save((err, doubleSavedUser) => {
-                res.json(doubleSavedUser);
-              })
-              .catch((err) => {
-                next(err);
-              });  
-            })
-            .catch((err) => {
-              next(err);
-            });
-          });
-        }
       })
-      .catch((err) => {
-        if (err) {
-          next(err);
-        }
-        if (!user) {
-          console.error('User was not found');
-        }
-      });
-*/
+      .catch( (err) => {
+        console.log('error finding photo', err);
+      }
+    );
   },
 
   getPhotoData: function(req, res, next) {
