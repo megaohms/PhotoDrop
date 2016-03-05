@@ -233,7 +233,7 @@ module.exports = {
     });
   },
 
-  fetchStreamsObject: function(req, res, next){
+  fetchStreamsObjects: function(req, res, next){
     //fetch streamsObject with photo_id and .populate method, see fetch friends below
     var streamsPhotosArr = [];
     
